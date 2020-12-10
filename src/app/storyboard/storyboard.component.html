@@ -1,0 +1,5 @@
+<div>
+    <div *ngFor="let language of stories">
+        <h3>{{language[0].language}}</h3>
+        <button *ngFor="let story of language" (click)="onClick(story)">{{story.title}}</button>
+</div>
