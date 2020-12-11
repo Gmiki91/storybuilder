@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Story = require('../models/story');
 
+router.get('/', (req, res) => {
+    Story.find().then((stories) => {
+        res.status(200).send(stories);
+    });
+})
+
 router.post('/', async (req, res, next) => {
     var result = [];
     var promises = [];
@@ -11,7 +17,8 @@ router.post('/', async (req, res, next) => {
                 "language": element.language,
                 "level": { $lte: element.level }
             }).then((stories) => {
-                result.push(stories);
+                if (stories.length !== 0)
+                    result.push(stories);
                 resolve();
             })
         }))
@@ -26,10 +33,12 @@ router.post('/add', (req, res, next) => {
     var story = new Story({
         title: req.body.title,
         level: req.body.level,
-        language: req.body.language
+        language: req.body.language,
+        popularity: 0,
+        lastUpdated: new Date()
     });
     story.save().then(() => {
-        res.status(201).json("Story created")
+        res.status(200).json("Story created")
     })
 })
 

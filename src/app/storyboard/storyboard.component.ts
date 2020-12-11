@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { first } from 'rxjs/operators'
 import { Story } from '../models/story.model';
 import { StoryService } from '../services/story.service';
+import { DateTime } from "luxon";
 
 @Component({
   selector: 'app-storyboard',
@@ -9,47 +12,45 @@ import { StoryService } from '../services/story.service';
 })
 export class StoryboardComponent implements OnInit {
 
+  story: Story;
   stories: Story[][];
+  noStory: boolean;
+  languages = ["English", "German", "Spanish", "Russian", "Chinese", "Japanese"];
   constructor(private storyService: StoryService) { }
 
   ngOnInit(): void {
-    this.storyService.getStories().subscribe((result)=>{
-      console.log(result)
-      this.stories=result;
-    })
+    this.getStories();
+
   }
-  onClick(story:Story):void{
+
+  onClick(story: Story): void {
     console.log(story.title);
   }
 
+  async onSubmit(form: NgForm) {
+    let titles = await this.storyService.getAllStoryTitles().pipe(first()).toPromise();
+    if (titles.indexOf(form.value.title) > -1) {
+      console.log("title taken");
+    } else {
+      this.storyService.addStory({
+        "title": form.value.title,
+        "level": form.value.level,
+        "language": form.value.language,
+        "lastUpdated":new Date(),
+        "popularity":0
+      });
+      this.getStories();
+    }
+  }
+
+  private getStories(): void {
+    this.storyService.getStories().subscribe((result) => {
+      if (result.length != 0) {
+        this.stories = result;
+        this.noStory = false;
+      } else {
+        this.noStory = true;
+      }
+    })
+  }
 }
-     /*let story1: Story = {
-      "language": "german",
-      "level": 4,
-      "title": "Hallo4"
-    }
-    let story2: Story = {
-      "language": "german",
-      "level": 3,
-      "title": "Hallo3"
-    }
-    let story3: Story = {
-      "language": "german",
-      "level": 6,
-      "title": "Hallo6"
-    }
-    let story4: Story = {
-      "language": "english",
-      "level": 1,
-      "title": "Hello1"
-    }
-    let story5: Story = {
-      "language": "english",
-      "level": 2,
-      "title": "Hello2"
-    }
-   this.storyService.addStory(story1);
-    this.storyService.addStory(story2);
-    this.storyService.addStory(story3);
-    this.storyService.addStory(story4);
-    this.storyService.addStory(story5);*/

@@ -1,5 +1,46 @@
 <div>
-    <div *ngFor="let language of stories">
-        <h3>{{language[0].language}}</h3>
-        <button *ngFor="let story of language" (click)="onClick(story)">{{story.title}}</button>
+    <div *ngIf="!noStory">
+        <div class="storyCard" *ngFor="let language of stories">
+            <h3>{{language[0].language}}</h3>
+            <div class="story" *ngFor="let story of language">
+                <button (click)="onClick(story)">{{story.title}}</button>
+                <p>Level {{story.level}}
+                    <br>
+                    Popularity: {{story.popularity}}
+                    <br>
+                    Last updated: {{story.lastUpdated}}
+                </p>
+            </div>
+         
+        </div>
+        <br>
+    </div>
+    <div *ngIf="noStory">
+        <h3>Looks like there are no stories for you. You can make start one!</h3>
+    </div>
+    <h3>New Story</h3>
+    <form (ngSubmit)="onSubmit(storyForm)" #storyForm="ngForm">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" ngModel>
+        </div>
+        <div class="form-group">
+            <label for="language">Language</label>
+            <select type="text" class="form-control" id="language" name="language" ngModel>
+                <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="level">Level</label>
+            <select class="form-control" id="level" required name="level" ngModel>
+                <option [value]="1">A1 (300-600 words)</option>
+                <option [value]="2">A2 (600-1200 words)</option>
+                <option [value]="3">B1 (1200-2500 words)</option>
+                <option [value]="4">B2 (2500-5000 words)</option>
+                <option [value]="5">C1 (5000-10000 words)</option>
+                <option [value]="6">C2 (10000-20000 words)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="!storyForm.form.valid">Submit</button>
+    </form>
 </div>

@@ -1,4 +1,13 @@
-button{
-    display: block;
-    margin: 1rem;
+.storyCard{
+
+    border: thick double #32a1ce;
+    width: 20%;
+
+    margin:1%;
+    padding:1%;
+}
+.story{
+    margin: auto;
+
+    padding:3%;
 }
