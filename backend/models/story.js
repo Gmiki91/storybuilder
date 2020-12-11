@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 
 const storySchema = mongoose.Schema({
     title:String,
-    level:Number,
+    level:String,
     language:String,
     popularity:Number,
     lastUpdated:Date

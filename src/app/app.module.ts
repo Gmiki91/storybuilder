@@ -2,24 +2,34 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoryboardComponent } from './storyboard/storyboard.component';
 import { StoryService } from './services/story.service';
+import { SignupComponent } from './authentication/signup/signup.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { AuthService } from './services/auth.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StoryboardComponent
+    StoryboardComponent,
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
-  providers: [StoryService],
+  providers: [StoryService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

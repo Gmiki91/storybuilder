@@ -4,6 +4,8 @@ import { first } from 'rxjs/operators'
 import { Story } from '../models/story.model';
 import { StoryService } from '../services/story.service';
 import { DateTime } from "luxon";
+import { Language } from '../models/language.enum';
+import { Proficiency } from '../models/proficiency.enum';
 
 @Component({
   selector: 'app-storyboard',
@@ -15,10 +17,13 @@ export class StoryboardComponent implements OnInit {
   story: Story;
   stories: Story[][];
   noStory: boolean;
-  languages = ["English", "German", "Spanish", "Russian", "Chinese", "Japanese"];
+  languages:string[];
+  proficiencies:string[];
   constructor(private storyService: StoryService) { }
 
   ngOnInit(): void {
+    this.languages=Object.values(Language);
+    this.proficiencies=Object.keys(Proficiency);
     this.getStories();
 
   }

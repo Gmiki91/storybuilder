@@ -1,6 +1,6 @@
 export interface Story{
     title: string;
-    level:number;
+    level:string;
     language:string;
     popularity:number;
     lastUpdated:Date;

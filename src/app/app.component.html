@@ -1,2 +1,6 @@
-<button *ngIf="!loggedIn" (click)="einloggen()">Einloggen</button>
+<div *ngIf="!loggedIn">
+    <a mat-flat-button color=primary routerLinkActive="mat-accent" routerLink="/signup">Sign up</a>
+    <a mat-flat-button color=primary routerLinkActive="mat-accent" routerLink="/login">Log in</a>
+<!--<button (click)="einloggen()">Einloggen</button>-->
+</div>
 <router-outlet></router-outlet>
