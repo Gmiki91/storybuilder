@@ -42,4 +42,8 @@ export class StoryService {
     addStory(story: Story) {
         this.http.post('http://localhost:3300/api/stories/add', story).subscribe(() => this.pushStories());
     }
+
+    deleteStory(story: Story) {
+        this.http.delete('http://localhost:3300/api/stories/'+'/'+story.title).subscribe(() => this.pushStories());
+    }
 }

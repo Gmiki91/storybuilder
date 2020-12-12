@@ -49,6 +49,10 @@ export class StoryboardComponent implements OnInit {
     this.newStory = true;
   }
 
+  onDeleteStory(story:Story):void{
+    this.storyService.deleteStory(story);
+  }
+
   async onSubmit(form: NgForm) {
     let titles = await this.storyService.getAllStoryTitles().pipe(first()).toPromise();
     if (titles.indexOf(form.value.title) > -1) {

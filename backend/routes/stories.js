@@ -43,4 +43,8 @@ router.post('/add', (req, res, next) => {
     })
 })
 
+router.delete('/:title',(req,res) => {
+    Story.findOneAndDelete({title:req.params.title}).then(() => res.status(200).json("Story deleted"));
+})
+
 module.exports = router;
