@@ -12,13 +12,16 @@ import { SignupComponent } from './authentication/signup/signup.component';
 import { LoginComponent } from './authentication/login/login.component';
 import { AuthService } from './services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PageComponent } from './storyboard/page/page.component';
+import { PageService } from './services/page.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     StoryboardComponent,
     SignupComponent,
-    LoginComponent
+    LoginComponent,
+    PageComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     BrowserAnimationsModule
   ],
-  providers: [StoryService, AuthService],
+  providers: [StoryService, PageService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

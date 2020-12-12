@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
         promises.push(new Promise(async (resolve, reject) => {
             await Story.find({
                 "language": element.language,
-                "level": { $lte: element.level }
+                "level":  element.level 
             }).then((stories) => {
                 if (stories.length !== 0)
                     result.push(stories);
@@ -32,6 +32,7 @@ router.post('/', async (req, res, next) => {
 router.post('/add', (req, res, next) => {
     var story = new Story({
         title: req.body.title,
+        pages: [req.body.title+"1"],
         level: req.body.level,
         language: req.body.language,
         popularity: 0,

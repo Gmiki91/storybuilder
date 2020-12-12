@@ -10,7 +10,6 @@ router.post('/signup', (req, res, next) => {
             user = new User({
                 email: req.body.email,
                 password: hash,
-                languages:req.body.languages,
                 points:req.body.points,
                 votedFor:req.body.votedFor
             });

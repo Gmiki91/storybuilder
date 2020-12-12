@@ -7,29 +7,6 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required ngModel>
     </div>
-   <div *ngIf="languageAddedToList">
-       <label>Languages</label>
-       <ul>
-           <li *ngFor="let language of userLanguages">{{language.language}} : {{language.proficiency}}</li>
-       </ul>
-   </div>
-    
 </form>
-<button *ngIf="!addLanguage" (click)="onAddNewLanguage()">Add language</button>
-<form *ngIf="addLanguage" class="form-group" #addLanguageForm="ngForm">
 
-    <label for="language">Language</label>
-    <select type="text" class="form-control" id="language" name="language" required ngModel>
-        <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
-    </select>
-
-    <div class="form-group">
-        <label for="proficiency">Proficiency</label>
-        <select type="text" class="form-control" id="proficiency" name="proficiency" required ngModel>
-            <option *ngFor="let proficiency of proficiencies" [value]="proficiency">{{ proficiency }}</option>
-        </select>
-    </div>
-    <button class="btn btn-success" [disabled]="!addLanguageForm.form.valid" (click)="onAddLanguage(addLanguageForm)">Add language</button>
-    <button class="btn btn-success" (click)="onCancelLanguage()">Cancel</button>
-</form>
-<button class="btn btn-primary"  [disabled]="!f.form.valid || !languageAddedToList" (click)="onSignUp(f)">Sign up</button>
+<button class="btn btn-primary"  [disabled]="!f.form.valid" (click)="onSignUp(f)">Sign up</button>

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app=express();
 const storiesRoute=require('./routes/stories');
 const usersRoute=require('./routes/users');
+const pagesRoute=require('./routes/pages');
 
 
 mongoose.connect(
@@ -30,5 +31,6 @@ app.use((req,res,next)=>{
 
 app.use("/api/stories", storiesRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/pages", pagesRoute);
 
 module.exports=app;

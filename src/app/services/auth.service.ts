@@ -7,7 +7,9 @@ import { User } from '../models/user.model';
 @Injectable()
 export class AuthService{
     private userLogged = new Subject<User>();
+    
     constructor(private http: HttpClient) { }
+
     createUser(user:User){
         this.http.post('http://localhost:3300/api/users/signup', user).subscribe(response => {
             console.log(response);
