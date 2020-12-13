@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { Subject } from 'rxjs';
+import { Language } from '../models/language.enum';
 
 @Injectable()
 export class StoryService {
@@ -13,8 +14,8 @@ export class StoryService {
     constructor(private http: HttpClient) { }
 
     pushStories() {
-        var data = [{ language: "English", "level": "C1" }];
-        return this.http.post<Story[][]>('http://localhost:3300/api/stories/', data)
+        var languages =  Object.values(Language);
+        return this.http.post<Story[][]>('http://localhost:3300/api/stories/', languages)
             .pipe(
                 map(stories => {
                     return stories.filter(story => {
@@ -39,11 +40,20 @@ export class StoryService {
             );
     }
 
+    getPagesLength(storyTitle){
+        return this.http.get<number>('http://localhost:3300/api/stories/'+storyTitle);
+    }
+
     addStory(story: Story) {
         this.http.post('http://localhost:3300/api/stories/add', story).subscribe(() => this.pushStories());
     }
 
-    deleteStory(story: Story) {
-        this.http.delete('http://localhost:3300/api/stories/'+'/'+story.title).subscribe(() => this.pushStories());
+    addPageToStory(pageId:string, storyTitle:string){
+        this.http.patch('http://localhost:3300/api/stories/addPage',{pageId,storyTitle}).subscribe(() => this.pushStories());
     }
+
+    deleteStory(story: Story) {
+        this.http.delete('http://localhost:3300/api/stories/'+story.title).subscribe(() => this.pushStories());
+    }
+
 }

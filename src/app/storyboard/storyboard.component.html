@@ -1,3 +1,12 @@
+<label>Language filter</label>
+<select  [(ngModel)]="languagef" (ngModelChange)="languageFilterChanged($event)">
+    <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
+</select>
+<label>Level filter</label>
+<select  [(ngModel)]="levelf" (ngModelChange)="levelFilterChanged($event)">
+    <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
+</select>
+
 <div>
     <div *ngIf="!noStory">
         <div class="storyCard" *ngFor="let language of stories">
@@ -12,11 +21,11 @@
                 </p>
                 <button (click)="onDeleteStory(story)">Delete story</button>
             </div>
-         
+
         </div>
         <br>
     </div>
-    <div >
+    <div>
         <h3 *ngIf="noStory">Looks like there are no stories for this filter. You can start one!</h3>
         <button (click)="onNewStory()">Create a new Story</button>
         <form *ngIf="newStory" (ngSubmit)="onSubmit(storyForm)" #storyForm="ngForm">
@@ -33,11 +42,11 @@
             <div class="form-group">
                 <label for="level">Level</label>
                 <select class="form-control" id="level" required name="level" ngModel>
-                   <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
+                    <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-success" [disabled]="!storyForm.form.valid">Submit</button>
         </form>
     </div>
-   
+
 </div>

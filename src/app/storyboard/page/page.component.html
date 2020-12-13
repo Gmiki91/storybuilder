@@ -1,1 +1,17 @@
-<p *ngIf="page">{{page.content}}</p>
+<div *ngIf="page">
+   <!-- <p *ngIf="!contentEdit">{{page.content}}</p>-->
+    <p>{{page.content}}</p>
+    <input #contentInput >
+    <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
+
+    <div *ngIf="page.status==0">
+        <button *ngIf="!contentEdit" (click)="onEditContent()">Edit content</button>
+        <button *ngIf="contentEdit" (click)="onSaveContent(contentInput.value)">Save content</button>
+        <button (click)="onAddNewRoute()">Add new route</button>
+        <div *ngIf="addRoute">
+            <label>New route:</label>
+            <input #routeInput>
+            <button (click)="onAddRoute(routeInput.value)">Add route</button>
+        </div>
+    </div>
+</div>

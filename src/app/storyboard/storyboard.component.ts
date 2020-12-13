@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { first } from 'rxjs/operators'
 import { Story } from '../models/story.model';
@@ -16,7 +16,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./storyboard.component.css']
 })
 export class StoryboardComponent implements OnInit {
-
+  levelf;
+  languagef;
   storySubscription: Subscription = Subscription.EMPTY;
   story: Story;
   stories: Story[][];
@@ -41,15 +42,23 @@ export class StoryboardComponent implements OnInit {
 
   }
 
+  levelFilterChanged(event) {
+    console.log(event);
+  }
+
+  languageFilterChanged(event) {
+    console.log(event);
+  }
+
   onClick(story: Story): void {
-    this.router.navigate([story.title + "/1"])
+    this.router.navigate([story.title + "/1"]);
   }
 
   onNewStory(): void {
     this.newStory = true;
   }
 
-  onDeleteStory(story:Story):void{
+  onDeleteStory(story: Story): void {
     this.storyService.deleteStory(story);
   }
 
@@ -59,17 +68,20 @@ export class StoryboardComponent implements OnInit {
       console.log("title taken");
     } else {
       this.pageService.addPage({
-        "_id": form.value.title + "1",
+        "_id": form.value.title + "/1",
+        "status": 0,
+        "routes": [],
         "content": null
-      });
+      }).subscribe(() => { console.log("page added") });
       this.storyService.addStory({
         "title": form.value.title,
         "level": form.value.level,
-        "pages": null,
+        "pages": [form.value.title + "/1"],
         "language": form.value.language,
         "lastUpdated": new Date(),
         "popularity": 0
       });
+
 
       this.newStory = false;
     }

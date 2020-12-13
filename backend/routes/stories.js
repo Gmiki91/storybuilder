@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const Story = require('../models/story');
+const Page = require('../models/page');
 
 router.get('/', (req, res) => {
     Story.find().then((stories) => {
         res.status(200).send(stories);
     });
+})
+router.get('/:title', (req, res) => {
+    Story.findOne({ title: req.params.title }).then((story) => {
+        res.status(200).json(story.pages.length);
+    })
 })
 
 router.post('/', async (req, res, next) => {
@@ -14,8 +20,7 @@ router.post('/', async (req, res, next) => {
     req.body.forEach((element) => {
         promises.push(new Promise(async (resolve, reject) => {
             await Story.find({
-                "language": element.language,
-                "level":  element.level 
+                "language": element
             }).then((stories) => {
                 if (stories.length !== 0)
                     result.push(stories);
@@ -32,7 +37,7 @@ router.post('/', async (req, res, next) => {
 router.post('/add', (req, res, next) => {
     var story = new Story({
         title: req.body.title,
-        pages: [req.body.title+"1"],
+        pages: req.body.pages,
         level: req.body.level,
         language: req.body.language,
         popularity: 0,
@@ -43,8 +48,18 @@ router.post('/add', (req, res, next) => {
     })
 })
 
-router.delete('/:title',(req,res) => {
-    Story.findOneAndDelete({title:req.params.title}).then(() => res.status(200).json("Story deleted"));
+router.patch('/addPage', (req, res, next) => {
+    Story.updateOne({ title: req.body.storyTitle },
+        { $push: { pages: req.body.pageId } })
+        .then(() => console.log("Page added to story"))
+})
+
+router.delete('/:title', (req, res) => {
+    Story.findOneAndDelete({ title: req.params.title }).then((result) => {
+        Page.deleteMany({ _id: { $in: result.pages } }).then(() => {
+            res.status(200).json("Story and pages deleted");
+        })
+    });
 })
 
 module.exports = router;
