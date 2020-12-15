@@ -51,7 +51,7 @@ export class StoryboardComponent implements OnInit {
   }
 
   onClick(story: Story): void {
-    this.router.navigate([story.title + "/1"]);
+    this.router.navigate([story.title.toLowerCase() + "/1"]);
   }
 
   onNewStory(): void {
@@ -67,22 +67,23 @@ export class StoryboardComponent implements OnInit {
     if (titles.indexOf(form.value.title) > -1) {
       console.log("title taken");
     } else {
-      this.pageService.addPage({
-        "_id": form.value.title + "/1",
-        "status": 0,
-        "routes": [],
-        "content": null
-      }).subscribe(() => { console.log("page added") });
+      
       this.storyService.addStory({
         "title": form.value.title,
         "level": form.value.level,
-        "pages": [form.value.title + "/1"],
+        "pages": [form.value.title.toLowerCase() + "/1"],
         "language": form.value.language,
         "lastUpdated": new Date(),
         "popularity": 0
-      });
-
-
+      }).subscribe((story:Story)=>{
+        this.pageService.addPage({
+          "_id": story.title.toLowerCase() + "/1",
+          "storyId":story._id,
+          "status": 0,
+          "routes": [],
+          "content": null
+        }).subscribe(() => {this.storyService.pushStories()});
+      })
       this.newStory = false;
     }
   }

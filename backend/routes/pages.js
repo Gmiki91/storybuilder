@@ -5,6 +5,7 @@ const Page = require('../models/page');
 router.post('/', (req, res) => {
     var page = new Page({
         _id: req.body._id,
+        storyId:req.body.storyId,
         content: "You arrived at an empty page.",
         routes: req.body.routes,
         status: 0

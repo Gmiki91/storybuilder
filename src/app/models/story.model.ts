@@ -1,4 +1,5 @@
 export interface Story{
+    _id?:string;
     title: string;
     pages:[string];
     level:string;

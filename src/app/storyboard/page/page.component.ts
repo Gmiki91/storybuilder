@@ -37,7 +37,6 @@ export class PageComponent implements OnInit {
 
   onRoute(indexOfRoute):void{
     const newRoute = this.page.routes[indexOfRoute*2+1];
-    console.log(newRoute);
     this.router.navigate([newRoute]);
   }
 
@@ -53,15 +52,16 @@ export class PageComponent implements OnInit {
   }
 
   async onAddRoute(inputValue) {
-    let number = await this.storyService.getPagesLength(this.storyTitle).pipe(first()).toPromise();
+    let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
     number++;
     this.pageService.addPage({
       _id: this.storyTitle +'/'+ number,
+      storyId:this.page.storyId,
       content: null,
       routes: [],
       status: 0,
     }).subscribe(pageId => {
-      this.storyService.addPageToStory(pageId, this.storyTitle)
+      this.storyService.addPageToStory(pageId, this.page.storyId)
     });
     this.pageService.addRoute({
       pageId: this.page._id,

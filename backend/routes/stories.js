@@ -8,8 +8,8 @@ router.get('/', (req, res) => {
         res.status(200).send(stories);
     });
 })
-router.get('/:title', (req, res) => {
-    Story.findOne({ title: req.params.title }).then((story) => {
+router.get('/:id', (req, res) => {
+    Story.findById( req.params.id).then((story) => {
         res.status(200).json(story.pages.length);
     })
 })
@@ -44,18 +44,18 @@ router.post('/add', (req, res, next) => {
         lastUpdated: new Date()
     });
     story.save().then(() => {
-        res.status(200).json("Story created")
+        res.status(200).json(story);
     })
 })
 
 router.patch('/addPage', (req, res, next) => {
-    Story.updateOne({ title: req.body.storyTitle },
+    Story.updateOne({ _id: req.body.storyId },
         { $push: { pages: req.body.pageId } })
         .then(() => console.log("Page added to story"))
 })
 
-router.delete('/:title', (req, res) => {
-    Story.findOneAndDelete({ title: req.params.title }).then((result) => {
+router.delete('/:id', (req, res) => {
+    Story.findByIdAndDelete(req.params.id).then((result) => {
         Page.deleteMany({ _id: { $in: result.pages } }).then(() => {
             res.status(200).json("Story and pages deleted");
         })

@@ -40,20 +40,20 @@ export class StoryService {
             );
     }
 
-    getPagesLength(storyTitle){
-        return this.http.get<number>('http://localhost:3300/api/stories/'+storyTitle);
+    getPagesLength(storyId){
+        return this.http.get<number>('http://localhost:3300/api/stories/'+storyId);
     }
 
     addStory(story: Story) {
-        this.http.post('http://localhost:3300/api/stories/add', story).subscribe(() => this.pushStories());
+       return this.http.post<Story>('http://localhost:3300/api/stories/add', story);
     }
 
-    addPageToStory(pageId:string, storyTitle:string){
-        this.http.patch('http://localhost:3300/api/stories/addPage',{pageId,storyTitle}).subscribe(() => this.pushStories());
+    addPageToStory(pageId:string, storyId:string){
+        this.http.patch('http://localhost:3300/api/stories/addPage',{pageId,storyId}).subscribe(() => this.pushStories());
     }
 
     deleteStory(story: Story) {
-        this.http.delete('http://localhost:3300/api/stories/'+story.title).subscribe(() => this.pushStories());
+        this.http.delete('http://localhost:3300/api/stories/'+story._id).subscribe(() => this.pushStories());
     }
 
 }
