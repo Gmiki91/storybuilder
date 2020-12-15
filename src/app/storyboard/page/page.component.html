@@ -1,7 +1,8 @@
 <div *ngIf="page">
-   <!-- <p *ngIf="!contentEdit">{{page.content}}</p>-->
-    <p>{{page.content}}</p>
-    <input #contentInput >
+   <p *ngIf="!contentEdit">{{page.content}}</p>
+   <div *ngIf="contentEdit">
+    <textarea rows="4" cols="50" #contentInput >{{page.content}} </textarea>
+</div>
     <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
 
     <div *ngIf="page.status==0">
