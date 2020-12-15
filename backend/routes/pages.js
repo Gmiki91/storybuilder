@@ -16,18 +16,20 @@ router.post('/', (req, res) => {
 })
 router.patch('/addRoute', (req, res) => {
     Page.updateOne({ _id: req.body.pageId },
-        { $push: { routes: req.body.routeName } }
-    ).then(() => Page.updateOne({ _id: req.body.pageId },
-        { $push: { routes: req.body.routeId } }
-    )).then(() => res.status(200).json("Route added"))
+        {
+            $push: { routes: req.body.routeName },
+            $push: { routes: req.body.routeId }
+        }
+    ).then(() => res.status(200).json("Route added"))
 })
 
 router.patch('/removeRoute', (req, res) => {
     Page.updateOne({ _id: req.body.pageId },
-        { $pull: { routes: req.body.routeId } }
-    ).then(() => Page.updateOne({ _id: req.body.pageId },
-        { $pull: { routes: req.body.routeName } }
-    )).then(() => res.status(200).json("Route removed"));
+        {
+            $pull: { routes: req.body.routeId },
+            $pull: { routes: req.body.routeName }
+        }
+    ).then(() => res.status(200).json("Route removed"));
 })
 
 router.patch('/updateContent', (req, res) => {

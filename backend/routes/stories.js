@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     });
 })
 router.get('/:id', (req, res) => {
-    Story.findById( req.params.id).then((story) => {
+    Story.findById(req.params.id).then((story) => {
         res.status(200).json(story.pages.length);
     })
 })
@@ -50,7 +50,10 @@ router.post('/add', (req, res, next) => {
 
 router.patch('/addPage', (req, res, next) => {
     Story.updateOne({ _id: req.body.storyId },
-        { $push: { pages: req.body.pageId } })
+        {
+            lastUpdated: new Date(),
+            $push: { pages: req.body.pageId }
+        })
         .then(() => console.log("Page added to story"))
 })
 

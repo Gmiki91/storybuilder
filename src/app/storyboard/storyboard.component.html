@@ -17,7 +17,7 @@
                     <br>
                     Popularity: {{story.popularity}}
                     <br>
-                    Last updated: {{story.lastUpdated}}
+                    Last updated: {{story.lastUpdated  | date:'medium'}}
                 </p>
                 <button (click)="onDeleteStory(story)">Delete story</button>
             </div>
