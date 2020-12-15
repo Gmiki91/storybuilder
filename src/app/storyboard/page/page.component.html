@@ -2,13 +2,15 @@
    <p *ngIf="!contentEdit">{{page.content}}</p>
    <div *ngIf="contentEdit">
     <textarea rows="4" cols="50" #contentInput >{{page.content}} </textarea>
+    <button *ngIf="contentEdit" (click)="onSaveContent(contentInput.value)">Save content</button>
 </div>
     <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
 
     <div *ngIf="page.status==0">
         <button *ngIf="!contentEdit" (click)="onEditContent()">Edit content</button>
-        <button *ngIf="contentEdit" (click)="onSaveContent(contentInput.value)">Save content</button>
+        
         <button (click)="onAddNewRoute()">Add new route</button>
+        <button [ngClass]="{'active': removeRoute}" (click)="onRemoveRoute()">Remove route</button>
         <div *ngIf="addRoute">
             <label>New route:</label>
             <input #routeInput>

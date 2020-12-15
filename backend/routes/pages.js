@@ -5,7 +5,7 @@ const Page = require('../models/page');
 router.post('/', (req, res) => {
     var page = new Page({
         _id: req.body._id,
-        storyId:req.body.storyId,
+        storyId: req.body.storyId,
         content: "You arrived at an empty page.",
         routes: req.body.routes,
         status: 0
@@ -19,18 +19,25 @@ router.patch('/addRoute', (req, res) => {
         { $push: { routes: req.body.routeName } }
     ).then(() => Page.updateOne({ _id: req.body.pageId },
         { $push: { routes: req.body.routeId } }
-    ).then(() =>  res.status(200).json("Route added"))
-    );
+    )).then(() => res.status(200).json("Route added"))
+})
+
+router.patch('/removeRoute', (req, res) => {
+    Page.updateOne({ _id: req.body.pageId },
+        { $pull: { routes: req.body.routeId } }
+    ).then(() => Page.updateOne({ _id: req.body.pageId },
+        { $pull: { routes: req.body.routeName } }
+    )).then(() => res.status(200).json("Route removed"));
 })
 
 router.patch('/updateContent', (req, res) => {
-    Page.updateOne({ _id: req.body.pageId },{
+    Page.updateOne({ _id: req.body.pageId }, {
         "content": req.body.content
     }).then(() => res.status(200).json("Content updated"));
 })
 
 router.get('/:story/:page', (req, res) => {
-    const id = req.params.story +'/'+ req.params.page;
+    const id = req.params.story + '/' + req.params.page;
     Page.findById(id).then(page => {
         res.status(200).json(page);
     })

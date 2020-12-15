@@ -17,46 +17,64 @@ export class PageComponent implements OnInit {
   page: Page;
   pageSubscription = Subscription.EMPTY;
   addRoute: boolean;
-  contentEdit:boolean;
+  removeRoute: boolean;
+  contentEdit: boolean;
   routes = [];
 
-  constructor(private route: ActivatedRoute, private router:Router, private pageService: PageService, private storyService: StoryService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService) { }
 
   ngOnInit(): void {
-    this.contentEdit=false;
+    this.contentEdit = false;
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
-      this.pageService.findPageById(params.get("story") +'/'+ params.get("page"));
+      this.pageService.findPageById(params.get("story") + '/' + params.get("page"));
       this.subscribePage();
     })
+  }
+
+  onRoute(indexOfRoute): void {
+    const newRoute = this.page.routes[indexOfRoute * 2 + 1];
+    if (this.removeRoute) {
+      this.pageService.removeRoute({
+        pageId: this.page._id,
+        routeId: newRoute,
+        routeName:this.page.routes[indexOfRoute * 2]
+      });
+      this.removeRoute = false;
+
+    } else {
+      
+      this.router.navigate([newRoute]);
+    }
+  }
+
+  onEditContent(): void {
+    this.contentEdit = true;
+  }
+
+  onSaveContent(content): void {
+    this.pageService.updateContent(
+      {
+        pageId: this.page._id,
+        content: content
+      });
+    this.contentEdit = false;
   }
 
   onAddNewRoute(): void {
     this.addRoute = true;
   }
 
-  onRoute(indexOfRoute):void{
-    const newRoute = this.page.routes[indexOfRoute*2+1];
-    this.router.navigate([newRoute]);
-  }
-
-  onEditContent():void{
-    this.contentEdit=true;
-  }
-
-  onSaveContent(content):void{
-    this.pageService.updateContent(
-      {pageId:this.page._id,
-      content:content
-    });
+  onRemoveRoute(): void {
+    this.removeRoute = !this.removeRoute;
   }
 
   async onAddRoute(inputValue) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
     number++;
     this.pageService.addPage({
-      _id: this.storyTitle +'/'+ number,
-      storyId:this.page.storyId,
+      _id: this.storyTitle + '/' + number,
+      storyId: this.page.storyId,
       content: null,
       routes: [],
       status: 0,
@@ -66,8 +84,9 @@ export class PageComponent implements OnInit {
     this.pageService.addRoute({
       pageId: this.page._id,
       routeName: inputValue,
-      routeId: this.storyTitle +'/'+ number
+      routeId: this.storyTitle + '/' + number
     });
+    this.addRoute = false;
   }
 
   private subscribePage() {
