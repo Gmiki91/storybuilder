@@ -16,7 +16,8 @@ export class PageService {
     }
 
     findPageById(id: string) {
-        this.httpClient.get<Page>("http://localhost:3300/api/pages/"+id).subscribe(page=>this.page.next(page));
+        this.httpClient.get<Page>("http://localhost:3300/api/pages/"+id).subscribe(page=>{
+        this.page.next(page)});
     }
 
     getPageById(){
@@ -24,9 +25,9 @@ export class PageService {
     }
 
     addRoute(data){
-        this.httpClient.patch("http://localhost:3300/api/pages/addRoute", data).subscribe(()=>{
-            this.findPageById(data.pageId)});
+       return this.httpClient.patch("http://localhost:3300/api/pages/addRoute", data).toPromise();
     }
+
     removeRoute(data){
         this.httpClient.patch("http://localhost:3300/api/pages/removeRoute", data).subscribe(()=>{
             this.findPageById(data.pageId)});

@@ -30,6 +30,7 @@ export class PageComponent implements OnInit {
     })
   }
 
+
   onRoute(indexOfRoute): void {
     const newRoute = this.page.routes[indexOfRoute * 2 + 1];
     this.router.navigate([newRoute]);
@@ -37,6 +38,7 @@ export class PageComponent implements OnInit {
 
   updateRoutes(route) {
     this.routes[route.target.id] = route.target.value;
+
   }
 
   onAddNewRoute(): void {
@@ -48,20 +50,14 @@ export class PageComponent implements OnInit {
   }
 
   async onPublish(form: NgForm) {
-    this.pageService.publishContent(
-      {
-        pageId: this.page._id,
-        content: form.value.content
-      });
-
-     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
-    this.routes.forEach( inputValue => {
+    let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
+    for (const routeName of this.routes) {
       number++;
       this.pageService.addRoute({
         pageId: this.page._id,
-        routeName: inputValue,
+        routeName: routeName,
         routeId: this.storyTitle + '/' + number
-      });
+      })
       this.pageService.addPage({
         _id: this.storyTitle + '/' + number,
         storyId: this.page.storyId,
@@ -69,10 +65,14 @@ export class PageComponent implements OnInit {
         routes: [],
         status: 0,
       }).subscribe(pageId => {
-        this.storyService.addPageToStory(pageId, this.page.storyId)
+        this.storyService.addPageToStory(pageId, this.page.storyId);
+        this.pageService.publishContent(
+          {
+            pageId: this.page._id,
+            content: form.value.content
+          });
       });
-      
-    })
+    }
   }
 
   onAddRoute(inputValue) {
@@ -85,7 +85,6 @@ export class PageComponent implements OnInit {
       this.pageSubscription.unsubscribe();
     }
     this.pageSubscription = this.pageService.getPageById().subscribe(page => {
-      console.log(page);
       this.page = page;
       if (page.status == 0)
         this.routes = ['', ''];

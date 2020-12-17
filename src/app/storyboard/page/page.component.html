@@ -7,7 +7,7 @@
         <br>
         <input type="text" *ngFor="let route of routes;  index as i; trackBy: identify" id="{{i}}" name="route" (change)="updateRoutes($event)" placeholder="{{route}}" ngModel required>
         <br>
-        <button [disabled]="routes.indexOf('')>-1" (click)="onAddNewRoute()">Add new route</button>
+        <button [disabled]="routes.indexOf('')>-1 || routes.length>4" (click)="onAddNewRoute()">Add new route</button>
         <button [disabled]="routes.length < 3"(click)="onRemoveRoute()">Remove route</button>
         <button [disabled]="!storyForm.form.valid" (click)="onPublish(storyForm)">Publish</button>
     </form>
