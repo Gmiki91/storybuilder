@@ -1,20 +1,19 @@
 <div *ngIf="page">
-   <p *ngIf="!contentEdit">{{page.content}}</p>
-   <div *ngIf="contentEdit">
-    <textarea rows="4" cols="50" #contentInput >{{page.content}} </textarea>
-    <button *ngIf="contentEdit" (click)="onSaveContent(contentInput.value)">Save content</button>
-</div>
-    <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
+    <form #storyForm="ngForm" *ngIf="page.status==0">
+        <p>You arrived at an empty page. Write!</p>
+        <textarea class="story" rows="4" cols="50" id="content" name="content" ngModel required> </textarea>
+        <br>
+        <label>Routes:</label>
+        <br>
+        <input type="text" *ngFor="let route of routes;  index as i; trackBy: identify" id="{{i}}" name="route" (change)="updateRoutes($event)" placeholder="{{route}}" ngModel required>
+        <br>
+        <button [disabled]="routes.indexOf('')>-1" (click)="onAddNewRoute()">Add new route</button>
+        <button [disabled]="routes.length < 3"(click)="onRemoveRoute()">Remove route</button>
+        <button [disabled]="!storyForm.form.valid" (click)="onPublish(storyForm)">Publish</button>
+    </form>
 
-    <div *ngIf="page.status==0">
-        <button *ngIf="!contentEdit" (click)="onEditContent()">Edit content</button>
-        
-        <button (click)="onAddNewRoute()">Add new route</button>
-        <button [ngClass]="{'active': removeRoute}" (click)="onRemoveRoute()">Remove route</button>
-        <div *ngIf="addRoute">
-            <label>New route:</label>
-            <input #routeInput>
-            <button (click)="onAddRoute(routeInput.value)">Add route</button>
-        </div>
+    <div *ngIf="page.status!=0">
+        <p class="story">{{page.content}}</p>
+        <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
     </div>
 </div>

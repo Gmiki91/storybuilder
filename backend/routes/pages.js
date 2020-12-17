@@ -15,10 +15,10 @@ router.post('/', (req, res) => {
     })
 })
 router.patch('/addRoute', (req, res) => {
+    console.log(req.body);
     Page.updateOne({ _id: req.body.pageId },
         {
-            $push: { routes: req.body.routeName },
-            $push: { routes: req.body.routeId }
+            $addToSet: {routes: {$each:[ req.body.routeName, req.body.routeId]}}
         }
     ).then(() => res.status(200).json("Route added"))
 })
@@ -32,9 +32,10 @@ router.patch('/removeRoute', (req, res) => {
     ).then(() => res.status(200).json("Route removed"));
 })
 
-router.patch('/updateContent', (req, res) => {
+router.patch('/publishContent', (req, res) => {
     Page.updateOne({ _id: req.body.pageId }, {
-        "content": req.body.content
+        "content": req.body.content,
+        "status": 1
     }).then(() => res.status(200).json("Content updated"));
 })
 

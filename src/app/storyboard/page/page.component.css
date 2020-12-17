@@ -1,4 +1,9 @@
 .active{
     background: #FF735C;
 }
-
+.story{
+    white-space: pre-wrap;
+}
+::placeholder{
+    color:black;
+}

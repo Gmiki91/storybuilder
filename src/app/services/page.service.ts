@@ -31,8 +31,8 @@ export class PageService {
         this.httpClient.patch("http://localhost:3300/api/pages/removeRoute", data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }
-    updateContent(data){
-        this.httpClient.patch("http://localhost:3300/api/pages/updateContent", data).subscribe(()=>{
+    publishContent(data){
+        this.httpClient.patch("http://localhost:3300/api/pages/publishContent", data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }
 }
