@@ -14,12 +14,20 @@ router.post('/', (req, res) => {
         res.status(200).json(result._id);
     })
 })
-router.patch('/addRoute', (req, res) => {
-    console.log(req.body);
+
+router.post('/many', (req, res) => {
+    Page.collection.insertMany(req.body)
+   .then((result) => {
+       console.log(result.insertedIds);
+        res.status(200).json(result.ops);
+    })
+})
+
+router.patch('/addRoutes', (req, res) => {
     Page.updateOne({ _id: req.body.pageId },
-        {
-            $addToSet: {routes: {$each:[ req.body.routeName, req.body.routeId]}}
-        }
+        
+            { $push: {routes:  req.body.routes}}
+        
     ).then(() => res.status(200).json("Route added"))
 })
 

@@ -14,6 +14,9 @@ export class PageService {
     addPage(page: Page) {
        return this.httpClient.post<string>("http://localhost:3300/api/pages", page);
     }
+    addPages(pages:Page[]) {
+        return this.httpClient.post<Page[]>("http://localhost:3300/api/pages/many", pages);
+     }
 
     findPageById(id: string) {
         this.httpClient.get<Page>("http://localhost:3300/api/pages/"+id).subscribe(page=>{
@@ -24,8 +27,8 @@ export class PageService {
         return this.page.asObservable();
     }
 
-    addRoute(data){
-       return this.httpClient.patch("http://localhost:3300/api/pages/addRoute", data).toPromise();
+    addRoutes(data){
+       return this.httpClient.patch("http://localhost:3300/api/pages/addRoutes", data);
     }
 
     removeRoute(data){
@@ -33,6 +36,7 @@ export class PageService {
             this.findPageById(data.pageId)});
     }
     publishContent(data){
+        console.log("publish");
         this.httpClient.patch("http://localhost:3300/api/pages/publishContent", data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }

@@ -5,15 +5,17 @@
         <br>
         <label>Routes:</label>
         <br>
-        <input type="text" *ngFor="let route of routes;  index as i; trackBy: identify" id="{{i}}" name="route" (change)="updateRoutes($event)" placeholder="{{route}}" ngModel required>
+        <div  *ngFor="let route of routes.controls;  index as i">
+            <input [formControl]="routes.controls[i]" required  >
+        </div>
+        <button [disabled]="this.routes.controls.length>4 || routesNotFilled()" (click)="onAddRoute()">Add route</button>
+        <button [disabled]="routes.controls.length<3"(click)="onRemoveRoute()">Remove route</button>
+        <button [disabled]="!storyForm.form.valid || routesNotFilled()" (click)="onPublish(storyForm)">Publish</button>
         <br>
-        <button [disabled]="routes.indexOf('')>-1 || routes.length>4" (click)="onAddNewRoute()">Add new route</button>
-        <button [disabled]="routes.length < 3"(click)="onRemoveRoute()">Remove route</button>
-        <button [disabled]="!storyForm.form.valid" (click)="onPublish(storyForm)">Publish</button>
     </form>
 
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
-        <button *ngFor="let route of routes" (click)="onRoute(routes.indexOf(route))">{{route}}</button>
+        <button *ngFor="let route of routes2" (click)="onRoute(routes2.indexOf(route))">{{route}}</button>
     </div>
 </div>

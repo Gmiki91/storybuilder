@@ -48,11 +48,11 @@ router.post('/add', (req, res, next) => {
     })
 })
 
-router.patch('/addPage', (req, res, next) => {
+router.patch('/addPages', (req, res, next) => {
     Story.updateOne({ _id: req.body.storyId },
         {
             lastUpdated: new Date(),
-            $push: { pages: req.body.pageId }
+            $push: { pages: req.body.pageIds }
         })
         .then(() => console.log("Page added to story"))
 })

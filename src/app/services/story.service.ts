@@ -48,8 +48,8 @@ export class StoryService {
        return this.http.post<Story>('http://localhost:3300/api/stories/add', story);
     }
 
-    addPageToStory(pageId:string, storyId:string){
-        this.http.patch('http://localhost:3300/api/stories/addPage',{pageId,storyId}).subscribe(() => this.pushStories());
+    addPagesToStory(pageIds:string[], storyId:string){
+        this.http.patch('http://localhost:3300/api/stories/addPages',{pageIds,storyId}).subscribe(() => this.pushStories());
     }
 
     deleteStory(story: Story) {
