@@ -18,7 +18,6 @@ router.post('/', (req, res) => {
 router.post('/many', (req, res) => {
     Page.collection.insertMany(req.body)
    .then((result) => {
-       console.log(result.insertedIds);
         res.status(200).json(result.ops);
     })
 })

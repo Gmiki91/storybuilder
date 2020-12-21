@@ -14,6 +14,7 @@ import { AuthService } from './services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageComponent } from './storyboard/page/page.component';
 import { PageService } from './services/page.service';
+import { StownryComponent } from './stownry/stownry.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { PageService } from './services/page.service';
     StoryboardComponent,
     SignupComponent,
     LoginComponent,
-    PageComponent
+    PageComponent,
+    StownryComponent
   ],
   imports: [
     BrowserModule,

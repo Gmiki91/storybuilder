@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Story } from '../models/story.model';
-import { filter, map } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { User } from '../models/user.model';
+import {  map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Language } from '../models/language.enum';
 

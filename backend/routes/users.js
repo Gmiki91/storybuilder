@@ -10,6 +10,7 @@ router.post('/signup', (req, res, next) => {
             user = new User({
                 email: req.body.email,
                 password: hash,
+                storyId:req.body.storyId,
                 points:req.body.points,
                 votedFor:req.body.votedFor
             });
@@ -59,5 +60,10 @@ router.post('/login', (req, res, next) => {
                 message: "Auth failed"
             });
         })
+})
+
+router.patch('/addStory', (req, res) => {
+    User.findOneAndUpdate({ email: req.body.email },
+        {"storyId":req.body.storyId}).then(() => res.status(200).json("Story updated"));
 })
 module.exports = router;

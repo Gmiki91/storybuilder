@@ -14,6 +14,13 @@ router.get('/:id', (req, res) => {
     })
 })
 
+router.get('/own/:id', (req, res) => {
+    console.log(req.params.id);
+    Story.findById(req.params.id).then((story) => {
+        res.status(200).json(story);
+    })
+})
+
 router.post('/', async (req, res, next) => {
     var result = [];
     var promises = [];

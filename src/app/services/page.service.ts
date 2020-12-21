@@ -36,7 +36,6 @@ export class PageService {
             this.findPageById(data.pageId)});
     }
     publishContent(data){
-        console.log("publish");
         this.httpClient.patch("http://localhost:3300/api/pages/publishContent", data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }

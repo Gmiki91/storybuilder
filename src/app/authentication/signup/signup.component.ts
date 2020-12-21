@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Language } from 'src/app/models/language.enum';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -20,6 +19,7 @@ export class SignupComponent implements OnInit {
       email: form.value.email,
       password: form.value.password,
       points: 0,
+      storyId:null,
       votedFor: null
     });
   }

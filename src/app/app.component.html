@@ -1,6 +1,35 @@
-<div *ngIf="!loggedIn">
-    <a mat-flat-button color=primary routerLinkActive="mat-accent" routerLink="/signup">Sign up</a>
-    <a mat-flat-button color=primary routerLinkActive="mat-accent" routerLink="/login">Log in</a>
-<!--<button (click)="einloggen()">Einloggen</button>-->
-</div>
+<nav class="navbar navbar-light navbar-expand-lg" style="background-color: #e3f2fd;" *ngIf="!loggedIn">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/signup">Sign up </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/login">Log in</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/storyboard">Stories</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<nav class="navbar navbar-light navbar-expand-lg" style="background-color: #e3f2fd;" *ngIf="loggedIn">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/storyboard">Stories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/stownry">Your story</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/logout">Log out</a>
+            </li>
+            <li class="nav-item">
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
 <router-outlet></router-outlet>
