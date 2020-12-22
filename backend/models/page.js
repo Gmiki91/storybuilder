@@ -5,7 +5,10 @@ const pageSchema = mongoose.Schema({
     storyId:String,
     content:String,
     routes:[String],
-    status:Number
+    status:Number,
+    author:Object,
+    votes:Number,
+    dateOfCreation:Date
 })
 
 module.exports=mongoose.model("Page",pageSchema);

@@ -19,7 +19,6 @@
                     <br>
                     Last updated: {{story.lastUpdated  | date:'medium'}}
                 </p>
-                <button (click)="onDeleteStory(story)">Delete story</button>
             </div>
 
         </div>
@@ -28,5 +27,4 @@
     <div>
         <h3 *ngIf="noStory">Looks like there are no stories for this filter.</h3>
     </div>
-
 </div>

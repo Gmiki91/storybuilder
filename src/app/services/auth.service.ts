@@ -27,11 +27,18 @@ export class AuthService {
         return this.userLogged.asObservable();
     }
 
+    pushUpdatedUser(){
+        this.http.get<User>('http://localhost:3300/api/users/updated/'+ this.user.email).subscribe(response => {
+            this.user = response;
+            this.userLogged.next(response);
+        })
+    }
+
     getOwnStory() {
         console.log(this.user);
         return this.http.get<Story>('http://localhost:3300/api/stories/own/'+this.user.storyId);
     }
     addStory(storyId: string) {
-        return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(()=>this.getOwnStory());
+        return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(()=>this.pushUpdatedUser());
     }
 }

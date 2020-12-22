@@ -58,7 +58,7 @@ export class PageComponent implements OnInit {
   async onPublish(form: NgForm) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
     let routeNamesAndIds = [];
-    let pages = [];
+    let pages :Page[] = [];
 
     for (const routeName of this.routes.controls) {
       number++;
@@ -70,6 +70,9 @@ export class PageComponent implements OnInit {
         content: "You arrived at an empty page.",
         routes: [],
         status: 0,
+        author:null,
+        votes:null,
+        dateOfCreation:null
       });
     }
     this.pageService.addPages(pages).subscribe(ops => {

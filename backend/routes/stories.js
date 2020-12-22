@@ -12,6 +12,7 @@ router.get('/:id', (req, res) => {
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story.pages.length);
     })
+    .catch((err) => { res.status(500).json({ error: err }); })
 })
 
 router.get('/own/:id', (req, res) => {
@@ -19,6 +20,7 @@ router.get('/own/:id', (req, res) => {
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story);
     })
+    .catch((err) => { res.status(500).json({ error: "no story found" }); })
 })
 
 router.post('/', async (req, res, next) => {

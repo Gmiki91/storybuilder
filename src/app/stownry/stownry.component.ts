@@ -55,7 +55,10 @@ export class StownryComponent implements OnInit {
           "storyId":story._id,
           "status": 0,
           "routes": [],
-          "content": null
+          "content": null,
+          "author": null,
+          "dateOfCreation":null,
+          "votes":0
         }).subscribe(() => {this.storyService.pushStories()});
       })
     }

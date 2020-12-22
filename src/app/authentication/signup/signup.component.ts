@@ -18,6 +18,7 @@ export class SignupComponent implements OnInit {
     this.authService.createUser({
       email: form.value.email,
       password: form.value.password,
+      name:form.value.name,
       points: 0,
       storyId:null,
       votedFor: null

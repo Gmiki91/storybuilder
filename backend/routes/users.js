@@ -10,21 +10,22 @@ router.post('/signup', (req, res, next) => {
             user = new User({
                 email: req.body.email,
                 password: hash,
-                storyId:req.body.storyId,
-                points:req.body.points,
-                votedFor:req.body.votedFor
+                name:req.body.name,
+                storyId: req.body.storyId,
+                points: req.body.points,
+                votedFor: req.body.votedFor
             });
             user.save()
-            .then(result => {
-                res.status(201).json({
-                    message: "user created",
-                    result: result
-                });
-            })
-    })
-    .catch(err => {
-        res.status(500).json({ error: err });
-    })
+                .then(result => {
+                    res.status(201).json({
+                        message: "user created",
+                        result: result
+                    });
+                })
+        })
+        .catch(err => {
+            res.status(500).json({ error: err });
+        })
 });
 
 router.post('/login', (req, res, next) => {
@@ -62,8 +63,13 @@ router.post('/login', (req, res, next) => {
         })
 })
 
+router.get('/updated/:email', (req, res) => {
+    User.findOne({ email: req.params.email })
+        .then(user => { res.status(200).json(user) })
+})
+
 router.patch('/addStory', (req, res) => {
-    User.findOneAndUpdate({ email: req.body.email },
-        {"storyId":req.body.storyId}).then(() => res.status(200).json("Story updated"));
+    User.updateOne({ email: req.body.email },
+        { "storyId": req.body.storyId }).then(() => res.status(200).json("Story updated"));
 })
 module.exports = router;

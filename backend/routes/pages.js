@@ -8,7 +8,11 @@ router.post('/', (req, res) => {
         storyId: req.body.storyId,
         content: "You arrived at an empty page.",
         routes: req.body.routes,
-        status: 0
+        status: 0,
+        dateOfCreation:null,
+        author:null,
+        votes:req.body.votes
+
     });
     page.save().then((result) => {
         res.status(200).json(result._id);
@@ -40,9 +44,11 @@ router.patch('/removeRoute', (req, res) => {
 })
 
 router.patch('/publishContent', (req, res) => {
-    Page.updateOne({ _id: req.body.pageId }, {
-        "content": req.body.content,
-        "status": 1
+    Page.updateOne({ _id: req.body.data.pageId }, {
+        "content": req.body.data.content,
+        "status": 1,
+        "dateOfCreation":new Date(),
+        "author": req.body.user
     }).then(() => res.status(200).json("Content updated"));
 })
 
