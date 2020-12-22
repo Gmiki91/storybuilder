@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators'
 import { Page } from 'src/app/models/page.model';
+import { User } from 'src/app/models/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { PageService } from 'src/app/services/page.service';
 import { StoryService } from 'src/app/services/story.service';
 
@@ -20,13 +22,16 @@ export class PageComponent implements OnInit {
   routes: FormArray;
   routes2: string[];
   emptyRoute: boolean;
-
-  constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService) { }
+  user: User;
+  voted: boolean;
+  constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
   ngOnInit(): void {
+
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
       this.pageService.findPageById(params.get("story") + '/' + params.get("page"));
+        this.authService.pushUpdatedUser();
       this.subscribePage();
     })
   }
@@ -45,6 +50,20 @@ export class PageComponent implements OnInit {
     this.routes.removeAt(this.routes.controls.length - 1);
   }
 
+  onLike(): void {
+    this.voted = true;
+    this.authService.likePage(this.page._id);
+    this.pageService.pageLiked(this.page._id);
+    this.storyService.pageLiked(this.page.storyId);
+  }
+
+  onUnlike(): void {
+    this.voted = false;
+    this.authService.unlikePage(this.page._id);
+    this.pageService.pageUnliked(this.page._id);
+    this.storyService.pageUnliked(this.page.storyId);
+  }
+
   routesNotFilled(): boolean {
     for (const route of this.routes.controls) {
       if (route.value == '') {
@@ -58,7 +77,7 @@ export class PageComponent implements OnInit {
   async onPublish(form: NgForm) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
     let routeNamesAndIds = [];
-    let pages :Page[] = [];
+    let pages: Page[] = [];
 
     for (const routeName of this.routes.controls) {
       number++;
@@ -70,9 +89,9 @@ export class PageComponent implements OnInit {
         content: "You arrived at an empty page.",
         routes: [],
         status: 0,
-        author:null,
-        votes:null,
-        dateOfCreation:null
+        author: null,
+        votes: null,
+        dateOfCreation: null
       });
     }
     this.pageService.addPages(pages).subscribe(ops => {
@@ -99,16 +118,28 @@ export class PageComponent implements OnInit {
     }
     this.pageSubscription = this.pageService.getPageById().subscribe(page => {
       this.page = page;
+
+      if (!this.user)
+        this.subscribeUser();
       if (page.status == 0) {
         this.routes = new FormArray([new FormControl(''), new FormControl('')])
       }
       else {
         this.routes2 = (page.routes.filter((x, i) => i % 2 == 0)).sort((a, b) => {
-
           return page.routes.indexOf(a) - page.routes.indexOf(b)
         });
       }
 
     })
+  }
+
+  private subscribeUser() {
+
+    this.user = this.authService.user;
+    if (this.user.votedFor.includes(this.page._id)) {
+      this.voted = true;
+    } else {
+      this.voted = false;
+    }
   }
 }

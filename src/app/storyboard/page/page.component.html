@@ -16,7 +16,9 @@
 
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
-        <p>{{page.author.name}}</p>
+        <p>Author: {{page.author.name}}</p>
+        <button *ngIf="!voted" (click)="onLike()">Like</button>
+        <button *ngIf="voted" (click)="onUnlike()">Unlike</button>
         <button *ngFor="let route of routes2" (click)="onRoute(routes2.indexOf(route))">{{route}}</button>
     </div>
 </div>

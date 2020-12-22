@@ -22,7 +22,7 @@ export class PageService {
      }
 
     findPageById(id: string) {
-        this.authService.getUserLoggedIn().subscribe(user => {
+        this.authService.getUpdatedUser().subscribe(user => {
             this.user=user;
         })
         this.httpClient.get<Page>("http://localhost:3300/api/pages/"+id).subscribe(page=>{
@@ -41,8 +41,15 @@ export class PageService {
         this.httpClient.patch("http://localhost:3300/api/pages/removeRoute", data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }
+    pageLiked(pageId){
+        this.httpClient.patch("http://localhost:3300/api/pages/liked",{id:pageId}).subscribe(()=>{
+            this.findPageById(pageId)});
+    }
+    pageUnliked(pageId){
+        this.httpClient.patch("http://localhost:3300/api/pages/unliked", {id:pageId}).subscribe(()=>{
+            this.findPageById(pageId)});
+    }
     publishContent(data){
-        console.log("user:", this.user);
         this.httpClient.patch("http://localhost:3300/api/pages/publishContent", {data:data, user:this.user}).subscribe(()=>{
             this.findPageById(data.pageId)});
     }

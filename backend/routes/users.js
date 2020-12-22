@@ -72,4 +72,15 @@ router.patch('/addStory', (req, res) => {
     User.updateOne({ email: req.body.email },
         { "storyId": req.body.storyId }).then(() => res.status(200).json("Story updated"));
 })
+
+router.patch('/likePage', (req, res) => {
+    User.updateOne({ email: req.body.email },
+        { $push: {votedFor:  req.body.pageId}})
+        .then((user) => res.status(200).json(user));
+})
+router.patch('/unlikePage', (req, res) => {
+    User.updateOne({ email: req.body.email },
+        { $pull: {votedFor:  req.body.pageId}})
+        .then((user) => res.status(200).json(user));
+})
 module.exports = router;

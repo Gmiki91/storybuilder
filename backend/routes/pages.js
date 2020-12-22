@@ -9,9 +9,9 @@ router.post('/', (req, res) => {
         content: "You arrived at an empty page.",
         routes: req.body.routes,
         status: 0,
-        dateOfCreation:null,
-        author:null,
-        votes:req.body.votes
+        dateOfCreation: null,
+        author: null,
+        votes: req.body.votes
 
     });
     page.save().then((result) => {
@@ -21,16 +21,16 @@ router.post('/', (req, res) => {
 
 router.post('/many', (req, res) => {
     Page.collection.insertMany(req.body)
-   .then((result) => {
-        res.status(200).json(result.ops);
-    })
+        .then((result) => {
+            res.status(200).json(result.ops);
+        })
 })
 
 router.patch('/addRoutes', (req, res) => {
     Page.updateOne({ _id: req.body.pageId },
-        
-            { $push: {routes:  req.body.routes}}
-        
+
+        { $push: { routes: req.body.routes } }
+
     ).then(() => res.status(200).json("Route added"))
 })
 
@@ -47,7 +47,7 @@ router.patch('/publishContent', (req, res) => {
     Page.updateOne({ _id: req.body.data.pageId }, {
         "content": req.body.data.content,
         "status": 1,
-        "dateOfCreation":new Date(),
+        "dateOfCreation": new Date(),
         "author": req.body.user
     }).then(() => res.status(200).json("Content updated"));
 })
@@ -59,5 +59,20 @@ router.get('/:story/:page', (req, res) => {
     })
 })
 
+router.patch('/liked', (req, res) => {
+    Page.updateOne({ _id: req.body.id },
+        { $inc: { votes: 1 } })
+        .then(() => {
+            res.status(200).json("page in pages liked");
+        })
+})
+
+router.patch('/unliked', (req, res) => {
+    Page.updateOne({ _id: req.body.id },
+        { $inc: { votes: -1 } })
+        .then(() => {
+            res.status(200).json("page unliked");
+        })
+})
 
 module.exports = router;

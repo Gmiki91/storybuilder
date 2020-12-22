@@ -21,7 +21,7 @@ export class SignupComponent implements OnInit {
       name:form.value.name,
       points: 0,
       storyId:null,
-      votedFor: null
+      votedFor: [''],
     });
   }
 }

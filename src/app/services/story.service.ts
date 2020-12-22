@@ -50,6 +50,14 @@ export class StoryService {
         this.http.patch('http://localhost:3300/api/stories/addPages',{pageIds,storyId}).subscribe(() => this.pushStories());
     }
 
+    pageLiked(storyId:string){
+        return this.http.patch("http://localhost:3300/api/stories/liked", {id:storyId}).toPromise();
+    }
+
+    pageUnliked(storyId:string){
+        return this.http.patch("http://localhost:3300/api/stories/unliked", {id:storyId}).toPromise();
+    }
+
     deleteStory(story: Story) {
         this.http.delete('http://localhost:3300/api/stories/'+story._id).subscribe(() => this.pushStories());
     }

@@ -12,15 +12,14 @@ router.get('/:id', (req, res) => {
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story.pages.length);
     })
-    .catch((err) => { res.status(500).json({ error: err }); })
+        .catch((err) => { res.status(500).json({ error: err }); })
 })
 
 router.get('/own/:id', (req, res) => {
-    console.log(req.params.id);
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story);
     })
-    .catch((err) => { res.status(500).json({ error: "no story found" }); })
+        .catch((err) => { res.status(500).json({ error: "no story found" }); })
 })
 
 router.post('/', async (req, res, next) => {
@@ -64,6 +63,18 @@ router.patch('/addPages', (req, res, next) => {
             $push: { pages: req.body.pageIds }
         })
         .then(() => console.log("Page added to story"))
+})
+
+router.patch('/liked', (req, res, next) => {
+    Story.updateOne({ _id: req.body.id },
+        { $inc: { popularity: 1 } })
+        .then(() => res.status(200).json("Story popularity+1"))
+})
+
+router.patch('/unliked', (req, res, next) => {
+    Story.updateOne({ _id: req.body.id },
+        { $inc: { popularity: -1 } })
+        .then(() => res.status(200).json("Story popularity-1"))
 })
 
 router.delete('/:id', (req, res) => {
