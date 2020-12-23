@@ -27,10 +27,11 @@ export class PageComponent implements OnInit {
   voted: boolean;
   typeOfPublication: number;
   ownStory: boolean;
+  ownPage: boolean;
   constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.ownStory=false;
+    this.ownStory = false;
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
       this.pageService.findPageById(params.get("story") + '/' + params.get("page"));
@@ -110,7 +111,7 @@ export class PageComponent implements OnInit {
         {
           pageId: this.page._id,
           content: form.value.content,
-          status:this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
+          status: this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
         })
     })
   }
@@ -126,7 +127,7 @@ export class PageComponent implements OnInit {
       this.storyService.getStory(this.page.storyId).subscribe(story => {
         if (story)
           this.typeOfPublication = story.type;
-          console.log("typeOfPublication: " +this.typeOfPublication);
+        console.log("typeOfPublication: " + this.typeOfPublication);
       });
       if (page.status == 0) {
         this.routes = new FormArray([new FormControl(''), new FormControl('')])
@@ -150,10 +151,11 @@ export class PageComponent implements OnInit {
         else
           this.voted = false;
 
-        if (this.user.storyId === this.page.storyId){
+        if (this.user.storyId === this.page.storyId)
           this.ownStory = true;
-        }
-        console.log("ownStory",this.ownStory);
+
+        if (this.user.name == this.page.author.name)
+          this.ownStory = true;
       })
 
   }

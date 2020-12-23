@@ -25,7 +25,7 @@
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
         <p>Author: {{page.author.name}}</p>
-        <div *ngIf="!ownStory">
+        <div *ngIf="!ownStory && !ownPage">
             <button *ngIf="!voted" (click)="onLike()">Like</button>
             <button *ngIf="voted" (click)="onUnlike()">Unlike</button>
         </div>
