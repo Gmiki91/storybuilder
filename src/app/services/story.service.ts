@@ -27,8 +27,12 @@ export class StoryService {
         return this.stories.asObservable();
     }
 
+    getStory(storyId: string){
+        return this.http.get<Story>('http://localhost:3300/api/stories/one/' + storyId);
+    }
+
     getAllStoryTitles() {
-        return this.http.get<Story[]>('http://localhost:3300/api/stories')
+        return this.http.get<Story[]>('http://localhost:3300/api/stories/all')
             .pipe(
                 map(stories => {
                     return stories.map(story => {
@@ -39,7 +43,7 @@ export class StoryService {
     }
 
     getPagesLength(storyId){
-        return this.http.get<number>('http://localhost:3300/api/stories/'+storyId);
+        return this.http.get<number>('http://localhost:3300/api/stories/length/'+storyId);
     }
 
     addStory(story: Story) {

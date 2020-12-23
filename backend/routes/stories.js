@@ -3,19 +3,19 @@ const router = express.Router();
 const Story = require('../models/story');
 const Page = require('../models/page');
 
-router.get('/', (req, res) => {
+router.get('/all', (req, res) => {
     Story.find().then((stories) => {
         res.status(200).send(stories);
     });
 })
-router.get('/:id', (req, res) => {
+router.get('/length/:id', (req, res) => {
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story.pages.length);
     })
         .catch((err) => { res.status(500).json({ error: err }); })
 })
 
-router.get('/own/:id', (req, res) => {
+router.get('/one/:id', (req, res) => {
     Story.findById(req.params.id).then((story) => {
         res.status(200).json(story);
     })
@@ -49,6 +49,7 @@ router.post('/add', (req, res, next) => {
         level: req.body.level,
         language: req.body.language,
         popularity: 0,
+        type:req.body.type,
         lastUpdated: new Date()
     });
     story.save().then(() => {

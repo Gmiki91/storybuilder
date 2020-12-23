@@ -46,7 +46,7 @@ router.patch('/removeRoute', (req, res) => {
 router.patch('/publishContent', (req, res) => {
     Page.updateOne({ _id: req.body.data.pageId }, {
         "content": req.body.data.content,
-        "status": 1,
+        "status": req.body.status,
         "dateOfCreation": new Date(),
         "author": req.body.user
     }).then(() => res.status(200).json("Content updated"));

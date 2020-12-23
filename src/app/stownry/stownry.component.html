@@ -17,6 +17,12 @@
                 <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" required name="type" ngModel>
+                <option *ngFor="let type of types" [value]=type.value>{{type.desc}}</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-success" [disabled]="!storyForm.form.valid">Submit</button>
     </form>
 </div>
@@ -30,7 +36,7 @@
                 <br>
                 Last updated: {{story.lastUpdated | date:'medium'}}
             </p>
-            <button>Delete story</button>
+            <button (click)="onDelete()">Delete story</button>
         </div>
     </div>
 </div>

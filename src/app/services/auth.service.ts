@@ -40,7 +40,7 @@ export class AuthService {
     }
 
     getOwnStory() {
-        return this.http.get<Story>('http://localhost:3300/api/stories/own/'+this.user.storyId);
+        return this.http.get<Story>('http://localhost:3300/api/stories/one/'+this.user.storyId);
     }
     addStory(storyId: string) {
         return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(()=>this.pushUpdatedUser());

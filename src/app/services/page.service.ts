@@ -29,7 +29,7 @@ export class PageService {
         this.page.next(page)});
     }
 
-    getPageById(){
+    getPage(){
         return this.page.asObservable();
     }
 

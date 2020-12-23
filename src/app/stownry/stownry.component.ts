@@ -15,7 +15,8 @@ import { Language } from '../models/language.enum';
 export class StownryComponent implements OnInit {
 
   languages: string[];
-  levels;
+  levels:Object[];
+  types:Object[];
   story: Story;
   constructor(private authService: AuthService, private storyService: StoryService, private pageService: PageService) { }
 
@@ -28,12 +29,23 @@ export class StownryComponent implements OnInit {
       { value: "B2", desc: "B2 (2500-5000 words)" },
       { value: "C1", desc: "C1 (5000-10000 words)" },
       { value: "C2", desc: "C2 (10000-20000 words)" },
-    ]
+    ];
+    
+    this.types = [
+      {value:0, desc:"Private"},
+      {value:1, desc:"Protected"},
+      {value:2, desc:"Public with votes"},
+      {value:3, desc:"Public"},
+    ];
+
     this.authService.getOwnStory().subscribe(story => {
       if (story)
         this.story = story;
     })
 
+  }
+  onDelete(){
+    this.storyService.deleteStory(this.story);
   }
 
   async onSubmit(form: NgForm) {
@@ -46,6 +58,7 @@ export class StownryComponent implements OnInit {
         "level": form.value.level,
         "pages": [form.value.title.toLowerCase() + "/1"],
         "language": form.value.language,
+        "type":form.value.type,
         "lastUpdated": new Date(),
         "popularity": 0
       }).subscribe((story:Story)=>{
@@ -58,7 +71,7 @@ export class StownryComponent implements OnInit {
           "content": null,
           "author": null,
           "dateOfCreation":null,
-          "votes":0
+          "votes":0,
         }).subscribe(() => {this.storyService.pushStories()});
       })
     }

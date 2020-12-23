@@ -19,19 +19,22 @@ export class PageComponent implements OnInit {
   storyTitle: string;
   page: Page;
   pageSubscription = Subscription.EMPTY;
+  userSubscription = Subscription.EMPTY;
   routes: FormArray;
   routes2: string[];
   emptyRoute: boolean;
   user: User;
   voted: boolean;
+  typeOfPublication: number;
+  ownStory: boolean;
   constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
   ngOnInit(): void {
-
+    this.ownStory=false;
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
       this.pageService.findPageById(params.get("story") + '/' + params.get("page"));
-        this.authService.pushUpdatedUser();
+      this.subscribeUser();
       this.subscribePage();
     })
   }
@@ -66,9 +69,8 @@ export class PageComponent implements OnInit {
 
   routesNotFilled(): boolean {
     for (const route of this.routes.controls) {
-      if (route.value == '') {
+      if (route.value == '')
         return true;
-      }
     }
     return false;
   }
@@ -76,10 +78,11 @@ export class PageComponent implements OnInit {
 
   async onPublish(form: NgForm) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
+
     let routeNamesAndIds = [];
     let pages: Page[] = [];
 
-    for (const routeName of this.routes.controls) {
+    for (const routeName of this.routes.controls) { // a route-hoz tartozó oldalak inicializálása üresen
       number++;
       routeNamesAndIds.push(routeName.value);
       routeNamesAndIds.push(this.storyTitle + '/' + number);
@@ -106,8 +109,9 @@ export class PageComponent implements OnInit {
       this.pageService.publishContent(
         {
           pageId: this.page._id,
-          content: form.value.content
-        });
+          content: form.value.content,
+          status:this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
+        })
     })
   }
 
@@ -116,30 +120,41 @@ export class PageComponent implements OnInit {
     if (this.pageSubscription) {
       this.pageSubscription.unsubscribe();
     }
-    this.pageSubscription = this.pageService.getPageById().subscribe(page => {
+    this.pageSubscription = this.pageService.getPage().subscribe(page => {
       this.page = page;
-
-      if (!this.user)
-        this.subscribeUser();
+      this.authService.pushUpdatedUser();
+      this.storyService.getStory(this.page.storyId).subscribe(story => {
+        if (story)
+          this.typeOfPublication = story.type;
+          console.log("typeOfPublication: " +this.typeOfPublication);
+      });
       if (page.status == 0) {
         this.routes = new FormArray([new FormControl(''), new FormControl('')])
       }
       else {
-        this.routes2 = (page.routes.filter((x, i) => i % 2 == 0)).sort((a, b) => {
-          return page.routes.indexOf(a) - page.routes.indexOf(b)
-        });
+        this.routes2 = (page.routes.filter((x, i) => i % 2 == 0))
+          .sort((a, b) => { return page.routes.indexOf(a) - page.routes.indexOf(b) });
       }
-
     })
   }
 
   private subscribeUser() {
 
-    this.user = this.authService.user;
-    if (this.user.votedFor.includes(this.page._id)) {
-      this.voted = true;
-    } else {
-      this.voted = false;
-    }
+    if (this.userSubscription)
+      this.userSubscription.unsubscribe();
+    this.userSubscription = this.authService.getUpdatedUser()
+      .subscribe(user => {
+        this.user = user;
+        if (this.user.votedFor.includes(this.page._id))
+          this.voted = true;
+        else
+          this.voted = false;
+
+        if (this.user.storyId === this.page.storyId){
+          this.ownStory = true;
+        }
+        console.log("ownStory",this.ownStory);
+      })
+
   }
 }
