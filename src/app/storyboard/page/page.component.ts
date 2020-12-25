@@ -77,7 +77,30 @@ export class PageComponent implements OnInit {
   }
 
 
-  async onPublish(form: NgForm) {
+  onPublish(form: NgForm) {
+    if (this.ownStory || this.typeOfPublication === 3) { //public
+      this.publishStory(form.value.content)
+
+    } else {
+      this.putStoryUnderApproval(form.value.content)
+    }
+  }
+
+  private putStoryUnderApproval(content: string) {
+    this.pageService.addPage(
+      {
+        "tempId": this.page._id,
+        "storyId": this.page.storyId,
+        "status": 1,
+        "routes": [],
+        "content": content,
+        "author": null,
+        "dateOfCreation": null,
+        "votes": 0,
+      })
+  }
+
+  private async publishStory(content: string) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
 
     let routeNamesAndIds = [];
@@ -110,12 +133,13 @@ export class PageComponent implements OnInit {
       this.pageService.publishContent(
         {
           pageId: this.page._id,
-          content: form.value.content,
-          status: this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
+          content: content,
+          status: 2,
+          user: this.user
+          //status: this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
         })
     })
   }
-
 
   private subscribePage() {
     if (this.pageSubscription) {
@@ -154,7 +178,7 @@ export class PageComponent implements OnInit {
         if (this.user.storyId === this.page.storyId)
           this.ownStory = true;
 
-        if (this.user.name == this.page.author.name)
+        if (this.page.author.name && this.user.name == this.page.author.name)
           this.ownStory = true;
       })
 
