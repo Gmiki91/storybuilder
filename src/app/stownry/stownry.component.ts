@@ -15,8 +15,8 @@ import { Language } from '../models/language.enum';
 export class StownryComponent implements OnInit {
 
   languages: string[];
-  levels:Object[];
-  types:Object[];
+  levels: Object[];
+  types: Object[];
   story: Story;
   constructor(private authService: AuthService, private storyService: StoryService, private pageService: PageService) { }
 
@@ -30,12 +30,12 @@ export class StownryComponent implements OnInit {
       { value: "C1", desc: "C1 (5000-10000 words)" },
       { value: "C2", desc: "C2 (10000-20000 words)" },
     ];
-    
+
     this.types = [
-      {value:0, desc:"Private"},
-      {value:1, desc:"Protected"},
-      {value:2, desc:"Public with votes"},
-      {value:3, desc:"Public"},
+      { value: 0, desc: "Private" },
+      { value: 1, desc: "Protected" },
+      { value: 2, desc: "Public with votes" },
+      { value: 3, desc: "Public" },
     ];
 
     this.authService.getOwnStory().subscribe(story => {
@@ -44,8 +44,9 @@ export class StownryComponent implements OnInit {
     })
 
   }
-  onDelete(){
+  onDelete() {
     this.storyService.deleteStory(this.story);
+    this.authService.deleteOwnStory();
   }
 
   async onSubmit(form: NgForm) {
@@ -58,21 +59,21 @@ export class StownryComponent implements OnInit {
         "level": form.value.level,
         "pages": [form.value.title.toLowerCase() + "/1"],
         "language": form.value.language,
-        "type":form.value.type,
+        "type": form.value.type,
         "lastUpdated": new Date(),
         "popularity": 0
-      }).subscribe((story:Story)=>{
+      }).subscribe((story: Story) => {
         this.authService.addStory(story._id);
         this.pageService.addPage({
           "_id": story.title.toLowerCase() + "/1",
-          "storyId":story._id,
+          "storyId": story._id,
           "status": 0,
           "routes": [],
           "content": null,
-          "author": null,
-          "dateOfCreation":null,
-          "votes":0,
-        }).subscribe(() => {this.storyService.pushStories()});
+          "author": this.authService.getUser(),
+          "dateOfCreation": null,
+          "votes": 0,
+        }).subscribe(() => { this.storyService.pushStories() });
       })
     }
   }
