@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Page = require('../models/page');
 
+router.get('/:story/:page', (req, res) => {
+    const id = req.params.story + '/' + req.params.page;
+    Page.findById(id).then(page => {
+        res.status(200).json(page);
+    })
+})
+
 router.post('/', (req, res) => {
     var page = new Page({
         _id: req.body._id,
@@ -10,8 +17,8 @@ router.post('/', (req, res) => {
         routes: req.body.routes,
         status: 0,
         dateOfCreation: null,
-        author: null,
-        votes: req.body.votes
+        author: req.body.author,
+        votes: 0
 
     });
     page.save().then((result) => {
@@ -24,6 +31,21 @@ router.post('/many', (req, res) => {
         .then((result) => {
             res.status(200).json(result.ops);
         })
+})
+
+router.post('/publishUnderApproval', (req, res) => {
+    var page = new Page({
+        tempId: req.body._id,
+        storyId: req.body.storyId,
+        content: req.body.content,
+        routes: req.body.routes,
+        status: 1,
+        dateOfCreation: new Date(),
+        author: req.body.user,
+        votes: req.body.votes
+
+    });
+    page.save().then(() => res.status(200).json("Page under approval"));
 })
 
 router.patch('/addRoutes', (req, res) => {
@@ -44,20 +66,17 @@ router.patch('/removeRoute', (req, res) => {
 })
 
 router.patch('/publishContent', (req, res) => {
-    Page.updateOne({ _id: req.body.data.pageId }, {
-        "content": req.body.data.content,
+    Page.updateOne({ _id: req.body.pageId }, {
+        "content": req.body.content,
         "status": req.body.status,
         "dateOfCreation": new Date(),
         "author": req.body.user
     }).then(() => res.status(200).json("Content updated"));
 })
 
-router.get('/:story/:page', (req, res) => {
-    const id = req.params.story + '/' + req.params.page;
-    Page.findById(id).then(page => {
-        res.status(200).json(page);
-    })
-})
+
+
+
 
 router.patch('/liked', (req, res) => {
     Page.updateOne({ _id: req.body.id },

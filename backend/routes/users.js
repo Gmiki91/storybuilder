@@ -73,6 +73,11 @@ router.patch('/addStory', (req, res) => {
         { "storyId": req.body.storyId }).then(() => res.status(200).json("Story updated"));
 })
 
+router.patch('/deleteStory', (req, res) => {
+    User.updateOne({ email: req.body.email },
+        { "storyId":null }).then(() => res.status(200).json("Story deleted"));
+})
+
 router.patch('/likePage', (req, res) => {
     User.updateOne({ email: req.body.email },
         { $push: {votedFor:  req.body.pageId}})
