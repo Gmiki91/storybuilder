@@ -2,7 +2,6 @@ import { User } from "./user.model";
 
 export interface Page{
     _id?: string;
-    tempId?:string;
     storyId:string;
     content: string;
     routes:string[];
