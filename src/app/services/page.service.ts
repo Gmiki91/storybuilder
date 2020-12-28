@@ -21,6 +21,10 @@ export class PageService {
         return this.httpClient.post<Page[]>("http://localhost:3300/api/pages/many", pages);
      }
 
+    putUnderApproval(data){
+        this.httpClient.post<string>("http://localhost:3300/api/pages/underApproval", data).subscribe(response=>console.log( response));
+    }
+
     findPageById(id: string) {
         this.authService.getUpdatedUser().subscribe(user => {
             this.user=user;
@@ -49,6 +53,7 @@ export class PageService {
         this.httpClient.patch("http://localhost:3300/api/pages/unliked", {id:pageId}).subscribe(()=>{
             this.findPageById(pageId)});
     }
+
     publishContent(data){
         this.httpClient.patch("http://localhost:3300/api/pages/publishContent", {data:data, user:this.user}).subscribe(()=>{
             this.findPageById(data.pageId)});

@@ -25,6 +25,9 @@ export class AuthService {
             this.userUpdated.next(response.user);
         });
     }
+    getUser(){
+        return this.user;
+    }
     getUserLoggedIn() {
         return this.userLogged.asObservable();
     }

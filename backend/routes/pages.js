@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const express = require('express');
 const router = express.Router();
 const Page = require('../models/page');
@@ -33,17 +34,14 @@ router.post('/many', (req, res) => {
         })
 })
 
-router.post('/publishUnderApproval', (req, res) => {
+router.post('/underApproval', (req, res) => {
     var page = new Page({
-        tempId: req.body._id,
-        storyId: req.body.storyId,
-        content: req.body.content,
-        routes: req.body.routes,
-        status: 1,
-        dateOfCreation: new Date(),
-        author: req.body.user,
-        votes: req.body.votes
-
+        _id:new ObjectId(),
+        storyId: req.body.pageId,
+        routes: req.body.routeNamesAndIds,
+        pages: req.body.pages,
+        status: req.body.status,
+        content:req.body.content
     });
     page.save().then(() => res.status(200).json("Page under approval"));
 })

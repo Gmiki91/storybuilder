@@ -2,7 +2,6 @@ const mongoose=require('mongoose');
 
 const pageSchema = mongoose.Schema({
     _id:String,
-    tempId:String,
     storyId:String,
     content:String,
     routes:[String],

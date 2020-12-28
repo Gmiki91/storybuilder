@@ -98,6 +98,22 @@ export class PageComponent implements OnInit {
         dateOfCreation: null
       });
     }
+    if(this.typeOfPublication === 1 || this.typeOfPublication === 2){
+      let tempPage = {
+        routeNamesAndIds:routeNamesAndIds,
+        pages:pages,
+        pageId:this.page._id,
+        content:form.value.content,
+        status:1
+      };
+      this.pageService.putUnderApproval(tempPage);
+    }else{
+      this.approveStory(routeNamesAndIds,pages, form.value.content);
+    }
+   
+  }
+
+  private approveStory(routeNamesAndIds:string[],pages:Page[], content:string){
     this.pageService.addPages(pages).subscribe(ops => {
       let result = ops.map(op => op._id);
       this.storyService.addPagesToStory(result, this.page.storyId);
@@ -110,12 +126,11 @@ export class PageComponent implements OnInit {
       this.pageService.publishContent(
         {
           pageId: this.page._id,
-          content: form.value.content,
-          status: this.typeOfPublication === 1 || this.typeOfPublication === 2 ? 1 : 2 //protected v public w votes? => under approval, else approved
+          content: content,
+          status:  2 
         })
     })
   }
-
 
   private subscribePage() {
     if (this.pageSubscription) {
