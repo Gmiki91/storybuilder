@@ -1,4 +1,5 @@
 <div *ngIf="page">
+    <div *ngIf="page.status==0"></div>
     <div *ngIf="typeOfPublication!=0 || ownStory">
 
         <form #storyForm="ngForm" *ngIf="page.status==0">
