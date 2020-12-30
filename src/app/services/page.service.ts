@@ -9,26 +9,24 @@ import { AuthService } from "./auth.service";
 export class PageService {
 
     private page = new Subject<Page>();
-    private user:User;
 
     constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
 
-    addPage(page: Page) {
+    addEmptyPage(page) {
        return this.httpClient.post<string>("http://localhost:3300/api/pages", page);
     }
-    addPages(pages:Page[]) {
-        return this.httpClient.post<Page[]>("http://localhost:3300/api/pages/many", pages);
-     }
+
 
     putUnderApproval(data){
-        this.httpClient.post<string>("http://localhost:3300/api/pages/underApproval", data).subscribe(response=>console.log( response));
+       return this.httpClient.post<string[]>("http://localhost:3300/api/pages/underApproval", data);
+    }
+
+    getUnderApprovals(story:string, page:string){
+        return this.httpClient.get<string[]>("http://localhost:3300/api/pages/underApproval/"+story+"/"+page);
     }
 
     findPageById(id: string) {
-        this.authService.getUpdatedUser().subscribe(user => {
-            this.user=user;
-        })
         this.httpClient.get<Page>("http://localhost:3300/api/pages/"+id).subscribe(page=>{
         this.page.next(page)});
     }
@@ -41,10 +39,15 @@ export class PageService {
        return this.httpClient.patch("http://localhost:3300/api/pages/addRoutes", data);
     }
 
-    removeRoute(data){
-        this.httpClient.patch("http://localhost:3300/api/pages/removeRoute", data).subscribe(()=>{
+    addRoute(data){
+         this.httpClient.patch("http://localhost:3300/api/pages/addRoute", data).subscribe(()=>{
             this.findPageById(data.pageId)});
-    }
+     }
+
+     pageFinished(pageId:string){
+        this.httpClient.patch("http://localhost:3300/api/pages/pageFinished",{pageId:pageId}).subscribe(()=>{
+            this.findPageById(pageId)});
+     }
     pageLiked(pageId){
         this.httpClient.patch("http://localhost:3300/api/pages/liked",{id:pageId}).subscribe(()=>{
             this.findPageById(pageId)});
@@ -55,7 +58,7 @@ export class PageService {
     }
 
     publishContent(data){
-        this.httpClient.patch("http://localhost:3300/api/pages/publishContent", {data:data, user:this.user}).subscribe(()=>{
+        this.httpClient.patch("http://localhost:3300/api/pages/publishContent",data).subscribe(()=>{
             this.findPageById(data.pageId)});
     }
 }

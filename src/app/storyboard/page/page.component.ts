@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators'
@@ -18,41 +18,34 @@ export class PageComponent implements OnInit {
 
   storyTitle: string;
   page: Page;
+  routeObject;
+  pageNumber:string;
   pageSubscription = Subscription.EMPTY;
   userSubscription = Subscription.EMPTY;
-  routes: FormArray;
-  routes2: string[];
-  emptyRoute: boolean;
   user: User;
   voted: boolean;
-  typeOfPublication: number;
   ownStory: boolean;
-  ownPage: boolean;
+  underApprovalRoutes:string[];
   constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.ownStory = false;
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
+      this.pageNumber = params.get("page");
       this.pageService.findPageById(params.get("story") + '/' + params.get("page"));
-      this.subscribeUser();
+
+
       this.subscribePage();
     })
+    
   }
 
-
-  onRoute(indexOfRoute): void {
-    const newRoute = this.page.routes[indexOfRoute * 2 + 1];
-    this.router.navigate([newRoute]);
+  onRouteClick(): void {
+    
+    this.router.navigate([this.routeObject.value]);
   }
 
-  onAddRoute(): void {
-    this.routes.push(new FormControl(''));
-  }
-
-  onRemoveRoute(): void {
-    this.routes.removeAt(this.routes.controls.length - 1);
-  }
 
   onLike(): void {
     this.voted = true;
@@ -68,69 +61,38 @@ export class PageComponent implements OnInit {
     this.storyService.pageUnliked(this.page.storyId);
   }
 
-  routesNotFilled(): boolean {
-    for (const route of this.routes.controls) {
-      if (route.value == '')
-        return true;
-    }
-    return false;
+onAddRoute(route){
+  this.pageService.putUnderApproval({pageId:this.page._id,route:route}).subscribe((result:string[])=>{
+    this.underApprovalRoutes=result});
+}
+
+
+  onPublish(form: NgForm) {
+    this.pageService.publishContent(
+      {
+        pageId: this.page._id,
+        content: form.value.content,
+        status:  1
+      })
+    
   }
 
-
-  async onPublish(form: NgForm) {
+  async onApproveRoute(route:string){
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();
-
-    let routeNamesAndIds = [];
-    let pages: Page[] = [];
-
-    for (const routeName of this.routes.controls) { // a route-hoz tartozó oldalak inicializálása üresen
-      number++;
-      routeNamesAndIds.push(routeName.value);
-      routeNamesAndIds.push(this.storyTitle + '/' + number);
-      pages.push({
-        _id: this.storyTitle + '/' + number,
-        storyId: this.page.storyId,
-        content: "You arrived at an empty page.",
-        routes: [],
-        status: 0,
-        author: null,
-        votes: null,
-        dateOfCreation: null
-      });
-    }
-    if(this.typeOfPublication === 1 || this.typeOfPublication === 2){
-      let tempPage = {
-        routeNamesAndIds:routeNamesAndIds,
-        pages:pages,
-        pageId:this.page._id,
-        content:form.value.content,
-        status:1
-      };
-      this.pageService.putUnderApproval(tempPage);
-    }else{
-      this.approveStory(routeNamesAndIds,pages, form.value.content);
-    }
-   
-  }
-
-  private approveStory(routeNamesAndIds:string[],pages:Page[], content:string){
-    this.pageService.addPages(pages).subscribe(ops => {
-      let result = ops.map(op => op._id);
-      this.storyService.addPagesToStory(result, this.page.storyId);
-    });
-
-    this.pageService.addRoutes({
-      pageId: this.page._id,
-      routes: routeNamesAndIds
+    number = number+1;
+    let pageId =this.storyTitle+"/"+number++;
+    console.log("pageId", pageId);
+    this.pageService.addEmptyPage({
+      "_id": pageId,
+      "storyId": this.page.storyId
     }).subscribe(() => {
-      this.pageService.publishContent(
-        {
-          pageId: this.page._id,
-          content: content,
-          status:  2 
-        })
-    })
+      this.storyService.addPageToStory(pageId,this.page.storyId);
+      this.pageService.addRoute({pageId:this.page._id,routeNameAndId:[route,pageId]});
+      this.pageService.pageFinished(this.page._id);
   }
+    )
+  }
+
 
   private subscribePage() {
     if (this.pageSubscription) {
@@ -138,24 +100,18 @@ export class PageComponent implements OnInit {
     }
     this.pageSubscription = this.pageService.getPage().subscribe(page => {
       this.page = page;
-      this.authService.pushUpdatedUser();
-      this.storyService.getStory(this.page.storyId).subscribe(story => {
-        if (story)
-          this.typeOfPublication = story.type;
-        console.log("typeOfPublication: " + this.typeOfPublication);
-      });
-      if (page.status == 0) {
-        this.routes = new FormArray([new FormControl(''), new FormControl('')])
+      this.underApprovalRoutes=page.routes;
+      this.routeObject={
+        name:this.page.route[0],
+        value:this.page.route[1]
       }
-      else {
-        this.routes2 = (page.routes.filter((x, i) => i % 2 == 0))
-          .sort((a, b) => { return page.routes.indexOf(a) - page.routes.indexOf(b) });
-      }
+      this.subscribeUser();
+     
     })
   }
 
   private subscribeUser() {
-
+    this.authService.pushUpdatedUser();
     if (this.userSubscription)
       this.userSubscription.unsubscribe();
     this.userSubscription = this.authService.getUpdatedUser()
@@ -169,8 +125,6 @@ export class PageComponent implements OnInit {
         if (this.user.storyId === this.page.storyId)
           this.ownStory = true;
 
-        if (this.user.name == this.page.author.name)
-          this.ownStory = true;
       })
 
   }

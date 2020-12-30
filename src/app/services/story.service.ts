@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Story } from '../models/story.model';
-import {  map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Language } from '../models/language.enum';
 
@@ -48,6 +48,10 @@ export class StoryService {
 
     addStory(story: Story) {
        return this.http.post<Story>('http://localhost:3300/api/stories/add', story);
+    }
+
+    addPageToStory(pageId:string, storyId:string){
+        this.http.patch('http://localhost:3300/api/stories/addPage',{pageId,storyId}).subscribe(()=> console.log("Empty page added at the end of newly accepted route"));
     }
 
     addPagesToStory(pageIds:string[], storyId:string){

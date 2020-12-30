@@ -1,35 +1,44 @@
 <div *ngIf="page">
     <div *ngIf="page.status==0">
-        <div *ngIf="typeOfPublication!=0 || ownStory">
+        <div *ngIf="ownStory">
 
-            <form #storyForm="ngForm" *ngIf="page.status==0">
+            <form #storyForm="ngForm">
                 <p>You arrived at an empty page. Write!</p>
                 <textarea class="story" rows="4" cols="50" id="content" name="content" ngModel required> </textarea>
                 <br>
-                <label>Routes:</label>
-                <br>
-                <div *ngFor="let route of routes.controls;  index as i">
-                    <input [formControl]="routes.controls[i]" required>
-                </div>
-                <button [disabled]="this.routes.controls.length>4 || routesNotFilled()" (click)="onAddRoute()">Add
-                    route</button>
-                <button [disabled]="routes.controls.length<3" (click)="onRemoveRoute()">Remove route</button>
-                <button [disabled]="!storyForm.form.valid || routesNotFilled()"
-                    (click)="onPublish(storyForm)">Publish</button>
+                <button [disabled]="!storyForm.form.valid" (click)="onPublish(storyForm)">Publish</button>
                 <br>
             </form>
         </div>
-        <div *ngIf="typeOfPublication==0 && !ownStory">
-            <p>You arrived at an empty page. Unfortunately, the story is set to private, you can't contribute to it.</p>
+        <div *ngIf="!ownStory">
+            <p>You arrived at an empty page.</p>
         </div>
     </div>
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
-        <p>Author: {{page.author.name}}</p>
-        <div *ngIf="!ownStory && !ownPage">
-            <button *ngIf="!voted" (click)="onLike()">Like</button>
-            <button *ngIf="voted" (click)="onUnlike()">Unlike</button>
+
+        <div *ngIf="page.status==1">
+
+            <div *ngFor="let route of underApprovalRoutes">
+                <p>{{route}}</p>
+                <div *ngIf="ownStory">
+                    <button (click)="onApproveRoute(route)">Approve</button>
+                    <button>Decline</button>
+                </div>
+                <div *ngIf="!ownStory">
+                    <button>Like route</button>
+                    <button>Unlike route</button>
+                </div>
+            </div>
+            <input #routeInput>
+            <button (click)="onAddRoute(routeInput.value)">Add route</button>
         </div>
-        <button *ngFor="let route of routes2" (click)="onRoute(routes2.indexOf(route))">{{route}}</button>
+
+        <button *ngIf="page.status==2" (click)="onRouteClick()">{{routeObject.name}}</button>
+        
+        <div *ngIf="!ownStory">
+            <button *ngIf="!voted" (click)="onLike()">Like page</button>
+            <button *ngIf="voted" (click)="onUnlike()">Unlike page</button>
+        </div>
     </div>
 </div>

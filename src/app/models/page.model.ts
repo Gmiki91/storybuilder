@@ -5,8 +5,8 @@ export interface Page{
     storyId:string;
     content: string;
     routes:string[];
+    route:string[];
     status:number;
-    author:User;
     votes:number;
     dateOfCreation:Date;
 }

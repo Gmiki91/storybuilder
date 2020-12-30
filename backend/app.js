@@ -6,7 +6,7 @@ const storiesRoute=require('./routes/stories');
 const usersRoute=require('./routes/users');
 const pagesRoute=require('./routes/pages');
 
-
+mongoose.set('useFindAndModify', false);
 mongoose.connect(
     "mongodb+srv://miki:FwhXUcInB4tqWK8L@cluster0.hakyf.mongodb.net/storybuilder?retryWrites=true&w=majority",
     {useNewUrlParser: true,useUnifiedTopology: true})

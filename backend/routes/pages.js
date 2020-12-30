@@ -15,35 +15,30 @@ router.post('/', (req, res) => {
         _id: req.body._id,
         storyId: req.body.storyId,
         content: "You arrived at an empty page.",
-        routes: req.body.routes,
+        routes: [],
+        route:[],
         status: 0,
         dateOfCreation: null,
-        author: req.body.author,
-        votes: 0
-
+        votes: 0,
+        type:0,
+        parentStories:null,
+        collaborators:null
     });
     page.save().then((result) => {
         res.status(200).json(result._id);
     })
 })
 
-router.post('/many', (req, res) => {
-    Page.collection.insertMany(req.body)
-        .then((result) => {
-            res.status(200).json(result.ops);
-        })
+
+router.get('/underApproval/:story/:page', (req, res) => {
+    var pageId = req.params.story + "/" + req.params.page;
+    Page.find({ storyId: pageId }).then((result) => { res.status(200).json(result.routes) })
 })
 
 router.post('/underApproval', (req, res) => {
-    var page = new Page({
-        _id:new ObjectId(),
-        storyId: req.body.pageId,
-        routes: req.body.routeNamesAndIds,
-        pages: req.body.pages,
-        status: req.body.status,
-        content:req.body.content
-    });
-    page.save().then(() => res.status(200).json("Page under approval"));
+    Page.findOneAndUpdate({ _id: req.body.pageId },
+        { $push: { routes: req.body.route } },{new:true})
+        .then((result) => res.status(200).json(result.routes));
 })
 
 router.patch('/addRoutes', (req, res) => {
@@ -54,13 +49,21 @@ router.patch('/addRoutes', (req, res) => {
     ).then(() => res.status(200).json("Route added"))
 })
 
-router.patch('/removeRoute', (req, res) => {
+router.patch('/addRoute', (req, res) => {
+    console.log("grr", req.body.routeNameAndId);
     Page.updateOne({ _id: req.body.pageId },
-        {
-            $pull: { routes: req.body.routeId },
-            $pull: { routes: req.body.routeName }
-        }
-    ).then(() => res.status(200).json("Route removed"));
+
+        { $push: { route: req.body.routeNameAndId } }
+
+    ).then(() => res.status(200).json("Route added"))
+})
+
+router.patch('/pageFinished', (req, res) => {
+    console.log("helló");
+    console.log(req.body.pageId);
+    Page.updateOne({ _id: req.body.pageId },
+        {  "status": 2 } 
+    ).then(() => res.status(200).json("Page status set to 2"))
 })
 
 router.patch('/publishContent', (req, res) => {
@@ -68,7 +71,6 @@ router.patch('/publishContent', (req, res) => {
         "content": req.body.content,
         "status": req.body.status,
         "dateOfCreation": new Date(),
-        "author": req.body.user
     }).then(() => res.status(200).json("Content updated"));
 })
 

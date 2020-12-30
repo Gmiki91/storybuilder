@@ -49,7 +49,7 @@ router.post('/add', (req, res, next) => {
         level: req.body.level,
         language: req.body.language,
         popularity: 0,
-        type:req.body.type,
+        type: req.body.type,
         lastUpdated: new Date()
     });
     story.save().then(() => {
@@ -66,6 +66,15 @@ router.patch('/addPages', (req, res, next) => {
         .then(() => console.log("Page added to story"))
 })
 
+router.patch('/addPage', (req, res, next) => {
+    Story.updateOne({ _id: req.body.storyId },
+        {
+            lastUpdated: new Date(),
+            $push: { pages: req.body.pageId }
+        })
+        .then(() =>res.status(200).json("Page added to story"))
+})
+
 router.patch('/liked', (req, res, next) => {
     Story.updateOne({ _id: req.body.id },
         { $inc: { popularity: 1 } })
@@ -80,7 +89,12 @@ router.patch('/unliked', (req, res, next) => {
 
 router.delete('/:id', (req, res) => {
     Story.findByIdAndDelete(req.params.id).then((result) => {
-        Page.deleteMany({ _id: { $in: result.pages } }).then(() => {
+        Page.deleteMany({
+            $or: [
+                { _id: { $in: result.pages } },
+                { storyId: { $in: result.pages } }
+            ]
+        }).then(() => {
             res.status(200).json("Story and pages deleted");
         })
     });

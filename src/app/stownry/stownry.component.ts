@@ -23,21 +23,12 @@ export class StownryComponent implements OnInit {
   ngOnInit(): void {
     this.languages = Object.values(Language);
     this.levels = [
-      { value: "A1", desc: "A1 (300-600 words)" },
-      { value: "A2", desc: "A2 (600-1200 words)" },
-      { value: "B1", desc: "B1 (1200-2500 words)" },
-      { value: "B2", desc: "B2 (2500-5000 words)" },
-      { value: "C1", desc: "C1 (5000-10000 words)" },
-      { value: "C2", desc: "C2 (10000-20000 words)" },
+      { value: "A", desc: "Beginner" },
+      { value: "B", desc: "Intermediate" },
+      { value: "C", desc: "Fluent" },
     ];
 
-    this.types = [
-      { value: 0, desc: "Private" },
-      { value: 1, desc: "Protected" },
-      { value: 2, desc: "Public with votes" },
-      { value: 3, desc: "Public" },
-    ];
-
+    
     this.authService.getOwnStory().subscribe(story => {
       if (story)
         this.story = story;
@@ -59,20 +50,13 @@ export class StownryComponent implements OnInit {
         "level": form.value.level,
         "pages": [form.value.title.toLowerCase() + "/1"],
         "language": form.value.language,
-        "type": form.value.type,
         "lastUpdated": new Date(),
         "popularity": 0
       }).subscribe((story: Story) => {
         this.authService.addStory(story._id);
-        this.pageService.addPage({
+        this.pageService.addEmptyPage({
           "_id": story.title.toLowerCase() + "/1",
-          "storyId": story._id,
-          "status": 0,
-          "routes": [],
-          "content": null,
-          "author": this.authService.getUser(),
-          "dateOfCreation": null,
-          "votes": 0,
+          "storyId": story._id
         }).subscribe(() => { this.storyService.pushStories() });
       })
     }

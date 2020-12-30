@@ -6,9 +6,9 @@ const storySchema = mongoose.Schema({
     pages:[String],
     level:String,
     language:String,
-    type:Number,
     popularity:Number,
-    lastUpdated:Date
+    lastUpdated:Date,
+    finished:Boolean
 })
 
 module.exports=mongoose.model("Story",storySchema);
