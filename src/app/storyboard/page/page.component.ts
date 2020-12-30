@@ -74,6 +74,10 @@ export class PageComponent implements OnInit {
     return this.answers.length >= 3
   }
 
+  userUnlockedThisPage(){
+   return this.user.unlocked.indexOf(this.page._id)>-1;
+  }
+
   onAddRoute(route) {
     this.pageService.putUnderApproval({ pageId: this.page._id, route: { name: route, user: this.user.email } }).subscribe((result: string[]) => {
       this.underApprovalRoutes = result
@@ -93,8 +97,6 @@ export class PageComponent implements OnInit {
         answers: answerArray
       })
   }
-
-
 
   async onApproveRoute(route) {
     let number = await this.storyService.getPagesLength(this.page.storyId).pipe(first()).toPromise();

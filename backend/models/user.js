@@ -6,7 +6,8 @@ const userSchema = mongoose.Schema({
     name:String,
     points:Number,
     storyId:String,
-    votedFor:[String]
+    votedFor:[String],
+    unlocked:[String]
 })
 
 module.exports=mongoose.model("User",userSchema);

@@ -5,4 +5,5 @@ export interface User{
     points:number;
     storyId:string;
     votedFor:[string];
+    unlocked:[string];
 }
