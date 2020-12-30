@@ -4,7 +4,7 @@
 </select>
 <label>Level filter</label>
 <select  [(ngModel)]="levelf" (ngModelChange)="levelFilterChanged($event)">
-    <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
+    <option *ngFor="let level of levels" [value]=level>{{level}}</option>
 </select>
 
 <div>

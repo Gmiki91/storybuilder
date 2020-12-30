@@ -23,12 +23,12 @@ export class StownryComponent implements OnInit {
   ngOnInit(): void {
     this.languages = Object.values(Language);
     this.levels = [
-      { value: "A", desc: "Beginner" },
-      { value: "B", desc: "Intermediate" },
-      { value: "C", desc: "Fluent" },
+      "Beginner",
+      "Intermediate",
+      "Fluent",
     ];
 
-    
+
     this.authService.getOwnStory().subscribe(story => {
       if (story)
         this.story = story;

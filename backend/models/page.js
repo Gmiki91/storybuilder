@@ -4,12 +4,14 @@ const pageSchema = mongoose.Schema({
     _id:String,
     storyId:String,
     content:String,
-    routes:[String],
+    routes:[Object],
     route:[String],
     status:Number,
     votes:Number,
     dateOfCreation:Date,
     type:Number,
+    question:String,
+    answers:[String],
     collaborators:[String],
     parentStories:[String]
 })

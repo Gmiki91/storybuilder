@@ -26,9 +26,9 @@ export class StoryboardComponent implements OnInit {
   ngOnInit(): void {
     this.languages = Object.values(Language);
     this.levels = [
-      { value: "A", desc: "Beginner" },
-      { value: "B", desc: "Intermediate" },
-      { value: "C", desc: "Fluent" },
+     "Beginner" ,
+   "Intermediate" ,
+      "Fluent" ,
     ]
     this.storyService.pushStories();
     this.subscribeToStories();

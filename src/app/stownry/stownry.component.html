@@ -14,7 +14,7 @@
         <div class="form-group">
             <label for="level">Level</label>
             <select class="form-control" id="level" required name="level" ngModel>
-                <option *ngFor="let level of levels" [value]=level.value>{{level.desc}}</option>
+                <option *ngFor="let level of levels" [value]=level>{{level}}</option>
             </select>
         </div>
         <button type="submit" class="btn btn-success" [disabled]="!storyForm.form.valid">Submit</button>

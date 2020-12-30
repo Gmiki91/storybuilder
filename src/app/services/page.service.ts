@@ -2,15 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { Page } from "../models/page.model";
-import { User } from "../models/user.model";
-import { AuthService } from "./auth.service";
 
 @Injectable()
 export class PageService {
 
     private page = new Subject<Page>();
 
-    constructor(private httpClient: HttpClient, private authService: AuthService) { }
+    constructor(private httpClient: HttpClient) { }
 
 
     addEmptyPage(page) {

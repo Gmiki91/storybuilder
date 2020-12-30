@@ -17,14 +17,17 @@ router.post('/', (req, res) => {
         content: "You arrived at an empty page.",
         routes: [],
         route:[],
+        answers:[],
+     /*   question:null,
         status: 0,
         dateOfCreation: null,
         votes: 0,
         type:0,
         parentStories:null,
-        collaborators:null
+        collaborators:null*/
     });
     page.save().then((result) => {
+        console.log(result.value);
         res.status(200).json(result._id);
     })
 })
@@ -50,7 +53,6 @@ router.patch('/addRoutes', (req, res) => {
 })
 
 router.patch('/addRoute', (req, res) => {
-    console.log("grr", req.body.routeNameAndId);
     Page.updateOne({ _id: req.body.pageId },
 
         { $push: { route: req.body.routeNameAndId } }
@@ -59,8 +61,6 @@ router.patch('/addRoute', (req, res) => {
 })
 
 router.patch('/pageFinished', (req, res) => {
-    console.log("helló");
-    console.log(req.body.pageId);
     Page.updateOne({ _id: req.body.pageId },
         {  "status": 2 } 
     ).then(() => res.status(200).json("Page status set to 2"))
@@ -70,7 +70,9 @@ router.patch('/publishContent', (req, res) => {
     Page.updateOne({ _id: req.body.pageId }, {
         "content": req.body.content,
         "status": req.body.status,
+        "question":req.body.question,
         "dateOfCreation": new Date(),
+       $push:{answers:req.body.answers}
     }).then(() => res.status(200).json("Content updated"));
 })
 

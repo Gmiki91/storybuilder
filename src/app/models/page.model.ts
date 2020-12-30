@@ -1,5 +1,3 @@
-import { User } from "./user.model";
-
 export interface Page{
     _id?: string;
     storyId:string;
@@ -8,5 +6,7 @@ export interface Page{
     route:string[];
     status:number;
     votes:number;
+    question:string;
+    answers:string[];
     dateOfCreation:Date;
 }

@@ -1,12 +1,20 @@
 <div *ngIf="page">
     <div *ngIf="page.status==0">
         <div *ngIf="ownStory">
-
             <form #storyForm="ngForm">
                 <p>You arrived at an empty page. Write!</p>
                 <textarea class="story" rows="4" cols="50" id="content" name="content" ngModel required> </textarea>
                 <br>
-                <button [disabled]="!storyForm.form.valid" (click)="onPublish(storyForm)">Publish</button>
+                <label>Question</label>
+                <input  id="question" name="question"  ngModel required>
+                <br>
+                <label>Answers</label>
+                <div *ngFor="let answer of answers.controls;  index as i">
+                    <input [formControl]="answers.controls[i]" required>
+                </div>
+                <button (click)="onAddAnswer()">Add answer</button>
+                <button (click)="onRemoveAnswer()">Remove answer</button>
+                <button [disabled]="!storyForm.form.valid || !got3Answers()" (click)="onPublish(storyForm)">Publish</button>
                 <br>
             </form>
         </div>
@@ -16,27 +24,18 @@
     </div>
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
-
         <div *ngIf="page.status==1">
-
             <div *ngFor="let route of underApprovalRoutes">
-                <p>{{route}}</p>
-                <div *ngIf="ownStory">
-                    <button (click)="onApproveRoute(route)">Approve</button>
-                    <button>Decline</button>
-                </div>
-                <div *ngIf="!ownStory">
-                    <button>Like route</button>
-                    <button>Unlike route</button>
-                </div>
+                <label>{{route.name}}</label>
+                <input type="button" *ngIf="ownStory" (click)="onApproveRoute(route)" value="Approve">
             </div>
-            <input #routeInput>
-            <button (click)="onAddRoute(routeInput.value)">Add route</button>
+            <div *ngIf="user">
+                <input #routeInput>
+                <button (click)="onAddRoute(routeInput.value)">Add route</button>
+            </div>
         </div>
-
         <button *ngIf="page.status==2" (click)="onRouteClick()">{{routeObject.name}}</button>
-        
-        <div *ngIf="!ownStory">
+        <div *ngIf="!ownStory && user">
             <button *ngIf="!voted" (click)="onLike()">Like page</button>
             <button *ngIf="voted" (click)="onUnlike()">Unlike page</button>
         </div>
