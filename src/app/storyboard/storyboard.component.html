@@ -1,37 +1,44 @@
 <div class="storyFilter">
     <label>Language filter</label>
     <br>
-        <select [(ngModel)]="languagef" (ngModelChange)="languageFilterChanged($event)">
-            <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
-        </select>
-        <br>
-        <mat-form-field class="chips">
-            <mat-chip-list #chipList aria-label="Fruit selection">
-                <mat-chip *ngFor="let language of languagefList" [selectable]="true" [removable]="true"
-                    (removed)="removeLanguageFromFilter(language)">
-                    {{language}}
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-            </mat-chip-list>
-        </mat-form-field>
+    <select [(ngModel)]="languagef" (ngModelChange)="languageFilterChanged($event)">
+        <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
+    </select>
+    <br>
+    <mat-form-field class="chips">
+        <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip *ngFor="let language of languagefList" [selectable]="true" [removable]="true"
+                (removed)="removeLanguageFromFilter(language)">
+                {{language}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+    </mat-form-field>
     <br>
     <br>
     <label>Level filter</label>
     <br>
-    <ul>
-        <li>
-            <mat-checkbox id="Beginner" (change)="levelFilterChanged($event.checked, $event.source.id)">Beginner
-            </mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox id="Intermediate" (change)="levelFilterChanged($event.checked, $event.source.id)">Intermediate
-            </mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox id="Fluent" (change)="levelFilterChanged($event.checked, $event.source.id)">Fluent
-            </mat-checkbox>
-        </li>
-    </ul>
+    <mat-checkbox id="Beginner" (change)="levelFilterChanged($event.checked, $event.source.id)">Beginner
+    </mat-checkbox>
+    <br>
+    <mat-checkbox id="Intermediate" (change)="levelFilterChanged($event.checked, $event.source.id)">Intermediate
+    </mat-checkbox>
+    <br>
+    <mat-checkbox id="Fluent" (change)="levelFilterChanged($event.checked, $event.source.id)">Fluent
+    </mat-checkbox>
+    <br>
+    <br>
+    <label>To the top with the ...</label>
+    <br>
+    <mat-radio-group>
+        <mat-radio-button (change)="sortBy($event)" value="popularity">
+            ... most popular!
+        </mat-radio-button>
+        <br>
+        <mat-radio-button (change)="sortBy($event)" value="newest">
+            ... newest!
+        </mat-radio-button>
+    </mat-radio-group>
 </div>
 <div class="storyList">
     <div *ngIf="!noStory">

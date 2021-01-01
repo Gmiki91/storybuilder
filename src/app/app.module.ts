@@ -7,6 +7,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoryboardComponent } from './storyboard/storyboard.component';
@@ -40,7 +41,8 @@ import { StownryComponent } from './stownry/stownry.component';
     ReactiveFormsModule ,
     MatChipsModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule
   ],
   providers: [StoryService, PageService, AuthService],
   bootstrap: [AppComponent]

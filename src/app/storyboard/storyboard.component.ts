@@ -37,6 +37,13 @@ export class StoryboardComponent implements OnInit {
     this.subscribeToStories();
   }
 
+  sortBy(button){
+    if(button.value=="popularity")
+    this.filteredStories.sort((a,b)=>(a.popularity > b.popularity) ? -1 : 1);
+    if(button.value=="newest")
+    this.filteredStories.sort((a,b)=>(a.lastUpdated > b.lastUpdated) ? -1 : 1);
+  }
+
   levelFilterChanged(checked, box) {
     if (checked)
       this.levelfList.push(box);
