@@ -1,26 +1,50 @@
-<label>Language filter</label>
-<select  [(ngModel)]="languagef" (ngModelChange)="languageFilterChanged($event)">
-    <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
-</select>
-<label>Level filter</label>
-<select  [(ngModel)]="levelf" (ngModelChange)="levelFilterChanged($event)">
-    <option *ngFor="let level of levels" [value]=level>{{level}}</option>
-</select>
-
-<div>
+<div class="storyFilter">
+    <label>Language filter</label>
+    <br>
+        <select [(ngModel)]="languagef" (ngModelChange)="languageFilterChanged($event)">
+            <option *ngFor="let language of languages" [value]="language">{{ language }}</option>
+        </select>
+        <br>
+        <mat-form-field class="chips">
+            <mat-chip-list #chipList aria-label="Fruit selection">
+                <mat-chip *ngFor="let language of languagefList" [selectable]="true" [removable]="true"
+                    (removed)="removeLanguageFromFilter(language)">
+                    {{language}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+        </mat-form-field>
+    <br>
+    <br>
+    <label>Level filter</label>
+    <br>
+    <ul>
+        <li>
+            <mat-checkbox id="Beginner" (change)="levelFilterChanged($event.checked, $event.source.id)">Beginner
+            </mat-checkbox>
+        </li>
+        <li>
+            <mat-checkbox id="Intermediate" (change)="levelFilterChanged($event.checked, $event.source.id)">Intermediate
+            </mat-checkbox>
+        </li>
+        <li>
+            <mat-checkbox id="Fluent" (change)="levelFilterChanged($event.checked, $event.source.id)">Fluent
+            </mat-checkbox>
+        </li>
+    </ul>
+</div>
+<div class="storyList">
     <div *ngIf="!noStory">
-        <div class="storyCard" *ngFor="let language of stories">
-            <h3>{{language[0].language}}</h3>
-            <div class="story" *ngFor="let story of language">
-                <button (click)="onClick(story)">{{story.title}}</button>
-                <p>Level {{story.level}}
-                    <br>
-                    Popularity: {{story.popularity}}
-                    <br>
-                    Last updated: {{story.lastUpdated  | date:'medium'}}
-                </p>
-            </div>
-
+        <div class="storyCard" *ngFor="let story of filteredStories">
+            <button (click)="onClick(story)">{{story.title}}</button>
+            <p>Language: {{story.language}}
+                <br>
+                Level: {{story.level}}
+                <br>
+                Popularity: {{story.popularity}}
+                <br>
+                Last updated: {{story.lastUpdated | date:'medium'}}
+            </p>
         </div>
         <br>
     </div>

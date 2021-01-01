@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoryboardComponent } from './storyboard/storyboard.component';
@@ -15,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageComponent } from './storyboard/page/page.component';
 import { PageService } from './services/page.service';
 import { StownryComponent } from './stownry/stownry.component';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +37,10 @@ import { StownryComponent } from './stownry/stownry.component';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule ,
+    MatChipsModule,
+    MatIconModule,
+    MatCheckboxModule
   ],
   providers: [StoryService, PageService, AuthService],
   bootstrap: [AppComponent]

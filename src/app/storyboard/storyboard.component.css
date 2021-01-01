@@ -1,13 +1,29 @@
-.storyCard{
-
+.storyCard {
+    margin-bottom: 5%;
+    text-align: center;
     border: thick double #32a1ce;
-    width: 20%;
-
-    margin:1%;
-    padding:1%;
+    padding: 1%;
+    width: 80%;
 }
-.story{
-    margin: auto;
 
-    padding:3%;
+.storyFilter {
+    width: 20%;
+    display: inline-block;
+    margin: 0 auto;
+    vertical-align: top
+}
+
+.storyList {
+    width: 25%;
+    display: inline-block;
+    margin: 0 auto;
+    vertical-align: top
+}
+
+ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+.chips{
+    width:100px;
 }

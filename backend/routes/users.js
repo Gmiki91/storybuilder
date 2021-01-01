@@ -13,7 +13,10 @@ router.post('/signup', (req, res, next) => {
                 name:req.body.name,
                 storyId: req.body.storyId,
                 points: req.body.points,
-                votedFor: req.body.votedFor
+                votedFor: req.body.votedFor,
+                favorite:req.body.favorite,
+                unlocked:req.body.unlocked,
+                routeAdvised:req.body.routeAdvised
             });
             user.save()
                 .then(result => {

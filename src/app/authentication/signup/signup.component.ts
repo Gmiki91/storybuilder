@@ -22,6 +22,9 @@ export class SignupComponent implements OnInit {
       points: 0,
       storyId:null,
       votedFor: [''],
+      unlocked:[''],
+      favorite:[''],
+      routeAdvised:['']
     });
   }
 }

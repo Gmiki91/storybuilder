@@ -8,10 +8,11 @@ import { Language } from '../models/language.enum';
 @Injectable()
 export class StoryService {
 
-    private stories = new Subject<Story[][]>();
+    private stories = new Subject<Story[]>();
     constructor(private http: HttpClient) { }
 
-    pushStories() {
+/** Stories grouped by language
+ *  pushStories() {
         var languages =  Object.values(Language);
         return this.http.post<Story[][]>('http://localhost:3300/api/stories/', languages)
             .pipe(
@@ -22,6 +23,10 @@ export class StoryService {
                 })
             ).subscribe(filteredStories=>this.stories.next(filteredStories));
     }
+ */
+   pushStories(){
+     this.http.get<Story[]>('http://localhost:3300/api/stories/all').subscribe(notfilteredStories=>this.stories.next(notfilteredStories));
+   }
 
     getStories(){
         return this.stories.asObservable();
@@ -69,5 +74,4 @@ export class StoryService {
     deleteStory(story: Story) {
         this.http.delete('http://localhost:3300/api/stories/'+story._id).subscribe(() => this.pushStories());
     }
-
 }

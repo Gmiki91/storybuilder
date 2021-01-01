@@ -6,4 +6,6 @@ export interface User{
     storyId:string;
     votedFor:[string];
     unlocked:[string];
+    routeAdvised:[string];
+    favorite:[string];
 }

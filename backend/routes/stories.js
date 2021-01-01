@@ -22,6 +22,8 @@ router.get('/one/:id', (req, res) => {
         .catch((err) => { res.status(500).json({ error: "no story found" }); })
 })
 
+/* ***Stories grouped by language
+*
 router.post('/', async (req, res, next) => {
     var result = [];
     var promises = [];
@@ -41,6 +43,8 @@ router.post('/', async (req, res, next) => {
     })
         .catch((err) => { res.status(500).json({ error: err }); })
 })
+*/
+
 
 router.post('/add', (req, res, next) => {
     var story = new Story({
