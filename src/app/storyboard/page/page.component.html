@@ -23,20 +23,20 @@
             <p>You arrived at an empty page.</p>
         </div>
     </div>
+
     <div *ngIf="page.status!=0">
         <p class="story">{{page.content}}</p>
-        <div *ngIf="user && !userUnlockedThisPage() && !ownStory">
-            <!-- questions -->
-            <button>Answer the question</button>
+        <!-- questions -->
+        <div *ngIf="user && !unlocked && !ownStory">
+            <button (click)="onQuestion()">Answer the question</button>
         </div>
-        <div *ngIf="user && userUnlockedThisPage() || ownStory">
+        <div *ngIf="user && unlocked || ownStory">
             <div *ngIf="page.status==1">
-                <div *ngFor="let route of underApprovalRoutes">
-                    <label>{{route.name}}</label>
-                    <input type="button" *ngIf="ownStory" (click)="onApproveRoute(route)" value="Approve">
+               
+                <div *ngIf="!advisedRoute">
+                    <input #routeInput>
+                    <button (click)="onAddRoute(routeInput.value)">Add route</button>
                 </div>
-                <input #routeInput>
-                <button (click)="onAddRoute(routeInput.value)">Add route</button>
             </div>
             <button *ngIf="page.status==2" (click)="onRouteClick()">{{routeObject.name}}</button>
         </div>
@@ -44,5 +44,12 @@
             <button *ngIf="!voted" (click)="onLike()">Like page</button>
             <button *ngIf="voted" (click)="onUnlike()">Unlike page</button>
         </div>
+    </div>
+</div>
+
+<div class="possibleRoutes" *ngIf="ownStory">
+    <div *ngFor="let route of underApprovalRoutes">
+        <label>{{route.name}}</label>
+        <input type="button" *ngIf="ownStory" (click)="onApproveRoute(route)" value="Approve">
     </div>
 </div>

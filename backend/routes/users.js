@@ -91,4 +91,15 @@ router.patch('/unlikePage', (req, res) => {
         { $pull: {votedFor:  req.body.pageId}})
         .then((user) => res.status(200).json(user));
 })
+router.patch('/unlockPage', (req, res) => {
+    User.updateOne({ email: req.body.email },
+        { $push: {unlocked:  req.body.pageId}})
+        .then((user) => res.status(200).json(user));
+})
+router.patch('/routeAdvised', (req, res) => {
+    User.updateOne({ email: req.body.email },
+        { $push: {routeAdvised:  req.body.pageId}})
+        .then((user) => res.status(200).json(user));
+})
+
 module.exports = router;

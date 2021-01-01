@@ -42,6 +42,11 @@ export class PageService {
             this.findPageById(data.pageId)});
      }
 
+     clearPossibleRoutes(pageId: string){
+        this.httpClient.patch("http://localhost:3300/api/pages/clearRoutes",{id:pageId}).subscribe(()=>{
+            this.findPageById(pageId)});
+     }
+
      pageFinished(pageId:string){
         this.httpClient.patch("http://localhost:3300/api/pages/pageFinished",{pageId:pageId}).subscribe(()=>{
             this.findPageById(pageId)});

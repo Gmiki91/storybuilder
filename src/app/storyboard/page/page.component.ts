@@ -8,6 +8,7 @@ import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { PageService } from 'src/app/services/page.service';
 import { StoryService } from 'src/app/services/story.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-page',
@@ -23,15 +24,16 @@ export class PageComponent implements OnInit {
   pageSubscription = Subscription.EMPTY;
   userSubscription = Subscription.EMPTY;
   user: User;
-  voted: boolean;
   ownStory: boolean;
   underApprovalRoutes: string[];
   answers: FormArray;
+  unlocked: boolean;
+  voted: boolean;
+  advisedRoute: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.ownStory = false;
     this.route.paramMap.subscribe(params => {
       this.storyTitle = params.get("story");
       this.pageNumber = params.get("page");
@@ -43,6 +45,42 @@ export class PageComponent implements OnInit {
 
   onRouteClick(): void {
     this.router.navigate([this.routeObject.value]);
+  }
+
+  onQuestion(): void {
+    this.page.question;
+
+    Swal.fire({
+      title: this.page.question,
+      icon: 'question',
+      input: 'text',
+      confirmButtonText: 'Check',
+    }).then(response => {
+      if (this.page.answers.indexOf(response.value) > -1) {
+        Swal.fire({
+          title: 'Correct!',
+          icon: 'success',
+          timer: 2000
+        });
+        this.pageUnlocked();
+      } else
+        Swal.fire({
+          title: 'Incorrect!',
+          icon: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'But it should be right!',
+          cancelButtonText: 'Oh well ...'
+        }).then(response => {
+          if (response.isConfirmed)
+            Swal.fire({
+              title: 'Your answer has been sent to the author for consideration.',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 2000
+            });
+        })
+
+    });
   }
 
   onLike(): void {
@@ -74,11 +112,10 @@ export class PageComponent implements OnInit {
     return this.answers.length >= 3
   }
 
-  userUnlockedThisPage(){
-   return this.user.unlocked.indexOf(this.page._id)>-1;
-  }
-
   onAddRoute(route) {
+    if (!this.ownStory)
+      this.authService.routeAdvised(this.page._id);
+
     this.pageService.putUnderApproval({ pageId: this.page._id, route: { name: route, user: this.user.email } }).subscribe((result: string[]) => {
       this.underApprovalRoutes = result
     });
@@ -93,7 +130,7 @@ export class PageComponent implements OnInit {
         pageId: this.page._id,
         content: form.value.content,
         status: 1,
-        question: form.value.question, 
+        question: form.value.question,
         answers: answerArray
       })
   }
@@ -110,9 +147,15 @@ export class PageComponent implements OnInit {
       this.storyService.addPageToStory(pageId, this.page.storyId);
       this.pageService.addRoute({ pageId: this.page._id, routeNameAndId: [route.name, pageId] });
       this.pageService.pageFinished(this.page._id);
+      this.pageService.clearPossibleRoutes(this.page._id);
+      this.underApprovalRoutes = [];
     })
   }
 
+  private pageUnlocked(): void {
+    this.unlocked = true;
+    this.authService.unlockPage(this.page._id);
+  }
 
   private subscribePage() {
     if (this.pageSubscription) {
@@ -145,7 +188,18 @@ export class PageComponent implements OnInit {
 
         if (this.user.storyId === this.page.storyId)
           this.ownStory = true;
+        else
+          this.ownStory = false;
 
+        if (this.user.unlocked.indexOf(this.page._id) > -1)
+          this.unlocked = true;
+        else
+          this.unlocked = false;
+
+        if (this.user.routeAdvised.indexOf(this.page._id) > -1)
+          this.advisedRoute = true;
+        else
+          this.advisedRoute = false;
       })
 
   }

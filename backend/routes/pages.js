@@ -76,9 +76,13 @@ router.patch('/publishContent', (req, res) => {
     }).then(() => res.status(200).json("Content updated"));
 })
 
-
-
-
+router.patch('/clearRoutes', (req, res) => {
+    Page.updateOne({ _id: req.body.id },
+       { $set: { "routes":[] }} )
+        .then(() => {
+            res.status(200).json("routes set to null");
+        })
+})
 
 router.patch('/liked', (req, res) => {
     Page.updateOne({ _id: req.body.id },

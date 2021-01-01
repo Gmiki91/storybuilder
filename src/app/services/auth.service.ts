@@ -25,7 +25,7 @@ export class AuthService {
             this.userUpdated.next(response.user);
         });
     }
-    getUser(){
+    getUser() {
         return this.user;
     }
     getUserLoggedIn() {
@@ -35,26 +35,32 @@ export class AuthService {
         return this.userUpdated.asObservable();
     }
 
-    pushUpdatedUser(){
-        this.http.get<User>('http://localhost:3300/api/users/updated/'+ this.user.email).subscribe(response => {
+    pushUpdatedUser() {
+        this.http.get<User>('http://localhost:3300/api/users/updated/' + this.user.email).subscribe(response => {
             this.user = response;
             this.userUpdated.next(response);
         })
     }
 
     getOwnStory() {
-        return this.http.get<Story>('http://localhost:3300/api/stories/one/'+this.user.storyId);
+        return this.http.get<Story>('http://localhost:3300/api/stories/one/' + this.user.storyId);
     }
-    deleteOwnStory(){
-        this.http.patch('http://localhost:3300/api/users/deleteStory', this.user.email).subscribe(()=>this.pushUpdatedUser());
+    deleteOwnStory() {
+        this.http.patch('http://localhost:3300/api/users/deleteStory', this.user.email).subscribe(() => this.pushUpdatedUser());
     }
     addStory(storyId: string) {
-        return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(()=>this.pushUpdatedUser());
+        return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
     }
-    likePage(pageId: string){
-        this.http.patch('http://localhost:3300/api/users/likePage', { pageId: pageId, email: this.user.email }).subscribe(()=>this.pushUpdatedUser());
+    likePage(pageId: string) {
+        this.http.patch('http://localhost:3300/api/users/likePage', { pageId: pageId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
     }
-    unlikePage(pageId: string){
-        this.http.patch('http://localhost:3300/api/users/unlikePage', { pageId: pageId, email: this.user.email }).subscribe(()=>this.pushUpdatedUser()); 
+    unlikePage(pageId: string) {
+        this.http.patch('http://localhost:3300/api/users/unlikePage', { pageId: pageId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
+    }
+    unlockPage(pageId: string) {
+        this.http.patch('http://localhost:3300/api/users/unlockPage', { pageId: pageId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
+    }
+    routeAdvised(pageId: string) {
+        this.http.patch('http://localhost:3300/api/users/routeAdvised', { pageId: pageId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
     }
 }
