@@ -1,0 +1,12 @@
+.post{
+    border: thick double #32a1ce;
+    margin:5%;
+}
+.user{
+    width: 20%;
+    display: inline-block;
+}
+.content{
+    width: 80%;
+    display: inline-block;
+}

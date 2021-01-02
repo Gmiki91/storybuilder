@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Post } from "../models/post.model";
+import { User } from "../models/user.model";
 
 @Injectable()
 export class ForumService{
@@ -10,7 +11,7 @@ export class ForumService{
         return this.http.get<Post[]>('http://localhost:3300/api/forum/'+storyTitle+'/'+pageNumber);
     }
 
-    postPost(pageId:string){
-        this.http.post('http://localhost:3300/api/forum/postPost',{pageId:pageId}).subscribe((response)=>console.log(response));
+    postPost(pageId:string, username:string, content:string){
+        this.http.post('http://localhost:3300/api/forum/postPost',{pageId:pageId, username:username, content:content}).subscribe((response)=>console.log(response));
     }
 }

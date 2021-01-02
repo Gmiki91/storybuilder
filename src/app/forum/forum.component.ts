@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../models/post.model';
+import { AuthService } from '../services/auth.service';
 import { ForumService } from '../services/forum.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class ForumComponent implements OnInit {
   @Input() pageNumber:string;
   pageId:string;
   posts: Post[];
-  constructor(private forumService: ForumService) { }
+  constructor(private forumService: ForumService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.pageId=this.storyTitle+"/"+this.pageNumber;
@@ -22,7 +23,8 @@ export class ForumComponent implements OnInit {
       this.posts = posts);
   }
 
-  postPost() {
-    this.forumService.postPost(this.pageId);
+  postPost(form) {
+    var user=this.authService.getUser();
+    this.forumService.postPost(this.pageId, user.name, form.value.content);
   }
 }

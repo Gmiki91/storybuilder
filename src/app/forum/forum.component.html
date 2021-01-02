@@ -1,3 +1,13 @@
 <p>forum works!</p>
-<p *ngFor="let post of posts">{{post.content}}</p>
-<button (click)="postPost()">Post</button>
+<div class="post" *ngFor="let post of posts">
+    <div class="user">
+        <p>{{post.userName}}</p>
+        <p>{{post.date}}</p>
+    </div>
+    <p class="content">{{post.content}}</p>
+</div>
+<form #postForm="ngForm">
+    <textarea rows="4" cols="50" id="content" name="content" ngModel required> </textarea>
+    <br>
+    <button (click)="postPost(postForm)">Post</button>
+</form>

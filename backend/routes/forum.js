@@ -11,9 +11,9 @@ router.get('/:story/:page',(req,res)=>{
 
 router.post('/postPost', (req, res)=>{
     var post = new Post({
-       content:"sajt",
+       content:req.body.content,
        pageId:req.body.pageId,
-       userName:"jani",
+       userName:req.body.username,
        date:new Date()
     });
     post.save().then(() => {
