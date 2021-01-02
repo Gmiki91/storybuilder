@@ -5,6 +5,7 @@ const app=express();
 const storiesRoute=require('./routes/stories');
 const usersRoute=require('./routes/users');
 const pagesRoute=require('./routes/pages');
+const forumRoute=require('./routes/forum');
 
 mongoose.set('useFindAndModify', false);
 mongoose.connect(
@@ -32,5 +33,6 @@ app.use((req,res,next)=>{
 app.use("/api/stories", storiesRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/pages", pagesRoute);
+app.use("/api/forum", forumRoute);
 
 module.exports=app;

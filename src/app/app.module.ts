@@ -19,6 +19,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageComponent } from './storyboard/page/page.component';
 import { PageService } from './services/page.service';
 import { StownryComponent } from './stownry/stownry.component';
+import { ForumComponent } from './forum/forum.component';
+import { ForumService } from './services/forum.service';
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import { StownryComponent } from './stownry/stownry.component';
     SignupComponent,
     LoginComponent,
     PageComponent,
-    StownryComponent
+    StownryComponent,
+    ForumComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,7 @@ import { StownryComponent } from './stownry/stownry.component';
     MatCheckboxModule,
     MatRadioModule
   ],
-  providers: [StoryService, PageService, AuthService],
+  providers: [StoryService, PageService, AuthService, ForumService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

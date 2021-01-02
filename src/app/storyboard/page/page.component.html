@@ -53,3 +53,5 @@
         <input type="button" *ngIf="ownStory" (click)="onApproveRoute(route)" value="Approve">
     </div>
 </div>
+
+<app-forum *ngIf="page" [storyTitle]="storyTitle" [pageNumber]="pageNumber"></app-forum>
