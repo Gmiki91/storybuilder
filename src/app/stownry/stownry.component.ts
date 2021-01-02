@@ -18,6 +18,7 @@ export class StownryComponent implements OnInit {
   levels: Object[];
   types: Object[];
   story: Story;
+  archivable: boolean;
   constructor(private authService: AuthService, private storyService: StoryService, private pageService: PageService) { }
 
   ngOnInit(): void {
@@ -30,8 +31,10 @@ export class StownryComponent implements OnInit {
 
 
     this.authService.getOwnStory().subscribe(story => {
-      if (story)
+      if (story) {
         this.story = story;
+        this.archivable = this.story.pages.length > 9 ? true : false;
+      }
     })
 
   }
@@ -39,6 +42,11 @@ export class StownryComponent implements OnInit {
     this.storyService.deleteStory(this.story);
     this.authService.deleteOwnStory();
     this.authService.removeSavedPageIds(this.story.pages);
+  }
+
+  onArchive(){
+    this.storyService.archiveStory(this.story._id);
+    this.authService.deleteOwnStory();
   }
 
   async onSubmit(form: NgForm) {
@@ -52,7 +60,9 @@ export class StownryComponent implements OnInit {
         "pages": [form.value.title.toLowerCase() + "/1"],
         "language": form.value.language,
         "lastUpdated": new Date(),
-        "popularity": 0
+        "popularity": 0,
+        "archived":false,
+        "authorId":this.authService.getUser()._id
       }).subscribe((story: Story) => {
         this.authService.addStory(story._id);
         this.pageService.addEmptyPage({

@@ -30,6 +30,7 @@ export class PageComponent implements OnInit {
   unlocked: boolean;
   voted: boolean;
   advisedRoute: boolean;
+  archived: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService, private storyService: StoryService, private authService: AuthService) { }
 
@@ -162,8 +163,10 @@ export class PageComponent implements OnInit {
     if (this.pageSubscription) {
       this.pageSubscription.unsubscribe();
     }
-    this.pageSubscription = this.pageService.getPage().subscribe(page => {
+   
+    this.pageSubscription = this.pageService.getPage().subscribe(async page =>  {
       this.page = page;
+      this.archived= await this.storyService.isStoryArchived(page.storyId).pipe(first()).toPromise();
       this.underApprovalRoutes = page.routes;
       if (page.status == 0)
         this.answers = new FormArray([new FormControl(''), new FormControl(''), new FormControl('')])

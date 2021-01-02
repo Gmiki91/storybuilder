@@ -6,5 +6,7 @@ export interface Story{
     language:string;
     popularity:number;
     lastUpdated:Date;
+    archived:boolean;
+    authorId:string;
 }
 

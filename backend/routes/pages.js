@@ -27,7 +27,6 @@ router.post('/', (req, res) => {
         collaborators:null*/
     });
     page.save().then((result) => {
-        console.log(result.value);
         res.status(200).json(result._id);
     })
 })
@@ -62,7 +61,7 @@ router.patch('/addRoute', (req, res) => {
 
 router.patch('/pageFinished', (req, res) => {
     Page.updateOne({ _id: req.body.pageId },
-        {  "status": 2 } 
+        { "status": 2 } 
     ).then(() => res.status(200).json("Page status set to 2"))
 })
 

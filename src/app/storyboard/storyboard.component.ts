@@ -50,7 +50,6 @@ export class StoryboardComponent implements OnInit {
     else
       this.levelfList.splice(this.levelfList.indexOf(box), 1);
 
-      console.log(this.levelfList);
       this.filterStories();
   }
 

@@ -33,7 +33,7 @@
         <div *ngIf="user && unlocked || ownStory">
             <div *ngIf="page.status==1">
                
-                <div *ngIf="!advisedRoute">
+                <div *ngIf="!advisedRoute && !archived">
                     <input #routeInput>
                     <button (click)="onAddRoute(routeInput.value)">Add route</button>
                 </div>

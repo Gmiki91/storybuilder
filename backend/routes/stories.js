@@ -4,7 +4,7 @@ const Story = require('../models/story');
 const Page = require('../models/page');
 
 router.get('/all', (req, res) => {
-    Story.find().then((stories) => {
+    Story.find({ archived: false }).then((stories) => {
         res.status(200).send(stories);
     });
 })
@@ -20,6 +20,11 @@ router.get('/one/:id', (req, res) => {
         res.status(200).json(story);
     })
         .catch((err) => { res.status(500).json({ error: "no story found" }); })
+})
+
+router.get('/archive/:id', (req, res) => {
+
+    Story.findById(req.params.id).then((story) => { res.status(200).json(story.archived) }).catch((err) => { res.status(500).json({ error: err }); })
 })
 
 /* ***Stories grouped by language
@@ -54,7 +59,9 @@ router.post('/add', (req, res, next) => {
         language: req.body.language,
         popularity: 0,
         type: req.body.type,
-        lastUpdated: new Date()
+        authorId: req.body.authorId,
+        lastUpdated: new Date(),
+        archived: req.body.archived,
     });
     story.save().then(() => {
         res.status(200).json(story);
@@ -76,7 +83,7 @@ router.patch('/addPage', (req, res, next) => {
             lastUpdated: new Date(),
             $push: { pages: req.body.pageId }
         })
-        .then(() =>res.status(200).json("Page added to story"))
+        .then(() => res.status(200).json("Page added to story"))
 })
 
 router.patch('/liked', (req, res, next) => {
@@ -88,6 +95,11 @@ router.patch('/liked', (req, res, next) => {
 router.patch('/unliked', (req, res, next) => {
     Story.updateOne({ _id: req.body.id },
         { $inc: { popularity: -1 } })
+        .then(() => res.status(200).json("Story popularity-1"))
+})
+router.patch('/archive', (req, res, next) => {
+    Story.updateOne({ _id: req.body.id },
+        { archived:true })
         .then(() => res.status(200).json("Story popularity-1"))
 })
 

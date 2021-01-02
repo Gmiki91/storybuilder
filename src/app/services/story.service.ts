@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Story } from '../models/story.model';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Language } from '../models/language.enum';
 
 @Injectable()
 export class StoryService {
@@ -70,8 +69,16 @@ export class StoryService {
     pageUnliked(storyId:string){
         return this.http.patch("http://localhost:3300/api/stories/unliked", {id:storyId}).toPromise();
     }
+    
+    archiveStory(storyId: string) {
+        this.http.patch('http://localhost:3300/api/stories/archive',{id:storyId}).subscribe(() => this.pushStories());
+    }
+    isStoryArchived(storyId: string) {
+       return this.http.get<boolean>('http://localhost:3300/api/stories/archive/'+storyId);
+    }
 
     deleteStory(story: Story) {
         this.http.delete('http://localhost:3300/api/stories/'+story._id).subscribe(() => this.pushStories());
     }
+
 }

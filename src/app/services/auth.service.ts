@@ -46,7 +46,7 @@ export class AuthService {
         return this.http.get<Story>('http://localhost:3300/api/stories/one/' + this.user.storyId);
     }
     deleteOwnStory() {
-        this.http.patch('http://localhost:3300/api/users/deleteStory', this.user.email).subscribe(() => this.pushUpdatedUser());
+        this.http.patch('http://localhost:3300/api/users/deleteStory', {email:this.user.email}).subscribe(() => this.pushUpdatedUser());
     }
     addStory(storyId: string) {
         return this.http.patch('http://localhost:3300/api/users/addStory', { storyId: storyId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
