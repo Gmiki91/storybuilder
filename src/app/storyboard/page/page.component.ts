@@ -60,6 +60,7 @@ export class PageComponent implements OnInit {
         Swal.fire({
           title: 'Correct!',
           icon: 'success',
+          showConfirmButton: false,
           timer: 2000
         });
         this.pageUnlocked();
@@ -76,7 +77,7 @@ export class PageComponent implements OnInit {
               title: 'Your answer has been sent to the author for consideration.',
               icon: 'info',
               showConfirmButton: false,
-              timer: 2000
+              timer: 3000
             });
         })
 

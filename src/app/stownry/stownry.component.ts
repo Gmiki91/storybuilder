@@ -38,6 +38,7 @@ export class StownryComponent implements OnInit {
   onDelete() {
     this.storyService.deleteStory(this.story);
     this.authService.deleteOwnStory();
+    this.authService.removeSavedPageIds(this.story.pages);
   }
 
   async onSubmit(form: NgForm) {

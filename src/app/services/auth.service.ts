@@ -63,4 +63,7 @@ export class AuthService {
     routeAdvised(pageId: string) {
         this.http.patch('http://localhost:3300/api/users/routeAdvised', { pageId: pageId, email: this.user.email }).subscribe(() => this.pushUpdatedUser());
     }
+    removeSavedPageIds(pageIds: string[]) {
+        this.http.patch('http://localhost:3300/api/users/removeSavedPageIds', {pageIds: pageIds}).subscribe(() => console.log() );
+    }
 }

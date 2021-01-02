@@ -10,13 +10,13 @@ router.post('/signup', (req, res, next) => {
             user = new User({
                 email: req.body.email,
                 password: hash,
-                name:req.body.name,
+                name: req.body.name,
                 storyId: req.body.storyId,
                 points: req.body.points,
                 votedFor: req.body.votedFor,
-                favorite:req.body.favorite,
-                unlocked:req.body.unlocked,
-                routeAdvised:req.body.routeAdvised
+                favorite: req.body.favorite,
+                unlocked: req.body.unlocked,
+                routeAdvised: req.body.routeAdvised
             });
             user.save()
                 .then(result => {
@@ -78,28 +78,35 @@ router.patch('/addStory', (req, res) => {
 
 router.patch('/deleteStory', (req, res) => {
     User.updateOne({ email: req.body.email },
-        { "storyId":null }).then(() => res.status(200).json("Story deleted"));
+        { "storyId": null }).then(() => res.status(200).json("Story deleted"));
 })
 
 router.patch('/likePage', (req, res) => {
     User.updateOne({ email: req.body.email },
-        { $push: {votedFor:  req.body.pageId}})
+        { $push: { votedFor: req.body.pageId } })
         .then((user) => res.status(200).json(user));
 })
 router.patch('/unlikePage', (req, res) => {
     User.updateOne({ email: req.body.email },
-        { $pull: {votedFor:  req.body.pageId}})
+        { $pull: { votedFor: req.body.pageId } })
         .then((user) => res.status(200).json(user));
 })
 router.patch('/unlockPage', (req, res) => {
     User.updateOne({ email: req.body.email },
-        { $push: {unlocked:  req.body.pageId}})
+        { $push: { unlocked: req.body.pageId } })
         .then((user) => res.status(200).json(user));
 })
 router.patch('/routeAdvised', (req, res) => {
     User.updateOne({ email: req.body.email },
-        { $push: {routeAdvised:  req.body.pageId}})
+        { $push: { routeAdvised: req.body.pageId } })
         .then((user) => res.status(200).json(user));
+})
+
+router.patch('/removeSavedPageIds', (req, res) => {
+    User.updateMany({}, {$pull: { favorite: { $in: req.body.pageIds } },}).then(() => res.status(200)).catch(err => res.status(401));
+    User.updateMany({}, {$pull: { routeAdvised: { $in: req.body.pageIds } },}).then(() => res.status(200)).catch(err => res.status(401));
+    User.updateMany({}, {$pull: { unlocked: { $in: req.body.pageIds } },}).then(() => res.status(200)).catch(err => res.status(401));
+    User.updateMany({}, {$pull: { votedFor: { $in: req.body.pageIds } },}).then(() => res.status(200)).catch(err => res.status(401));
 })
 
 module.exports = router;
